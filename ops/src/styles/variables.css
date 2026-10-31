@@ -96,7 +96,12 @@
   --grad-hero: radial-gradient(70% 70% at 15% 0, #52c689, #0000), radial-gradient(60% 60% at 95% 100%, #1fa07f, #0000), #1b9d78;
 
   /* Layout */
-  --sidebar-width: 230px;
+  --sidebar-width: 240px;
+  --sidebar-row-height: 44px;
+  --tree-line: var(--line);
+  --tree-line-width: 1px;
+  --tree-indent: 20px;
+  --tree-curve-radius: 6px;
   --header-height: 60px;
   --container-max: 1280px;
 

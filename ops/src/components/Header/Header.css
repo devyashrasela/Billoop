@@ -11,6 +11,37 @@
   z-index: 10;
 }
 
+.ops-header__menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--r-btn);
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.ops-header__menu-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .ops-header__menu-btn {
+    display: inline-flex;
+  }
+}
+
+.ops-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .ops-header-title {
   font-size: var(--fs-md);
   font-weight: var(--fw-medium);
