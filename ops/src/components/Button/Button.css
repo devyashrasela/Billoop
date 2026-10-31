@@ -1,0 +1,88 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-btn);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary (Green accent) */
+.btn--primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: #ffffff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--green-hover);
+  border-color: var(--green-hover);
+}
+
+/* Danger (Red accent) */
+.btn--danger {
+  color: var(--red);
+  border-color: var(--red-border);
+  background: var(--surface);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: var(--red-soft);
+  border-color: var(--red);
+}
+
+/* Glass button (for visual panels & hero surfaces) */
+.btn--glass {
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: var(--r-panel);
+  backdrop-filter: blur(8px);
+}
+
+.btn--glass:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Small variant */
+.btn--sm {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--fs-sm);
+}
+
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+

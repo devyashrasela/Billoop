@@ -1,0 +1,35 @@
+.stepper {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  gap: 0;
+  margin: var(--space-4) 0 var(--space-5);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.stepper__step {
+  flex: 1;
+  min-width: 100px;
+  padding-top: var(--space-3);
+  border-top: 3px solid var(--line);
+  color: var(--muted);
+  font-size: var(--fs-base);
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.stepper__step--done {
+  border-color: var(--green);
+  color: var(--ink);
+}
+
+.stepper__step--cur {
+  border-color: var(--green);
+  color: var(--green);
+  font-weight: var(--fw-medium);
+}
+
+.stepper__label {
+  display: block;
+}
+

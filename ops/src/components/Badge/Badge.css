@@ -1,0 +1,50 @@
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Green: Active, Paid, Success */
+.badge--paid,
+.badge--active,
+.badge--success {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+/* Blue: Confirmed, Info */
+.badge--confirmed,
+.badge--info {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+/* Amber: Quotation, Partially Paid, Warning */
+.badge--quotation,
+.badge--partial,
+.badge--warning {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+/* Grey: Draft, Closed, Neutral */
+.badge--draft,
+.badge--closed,
+.badge--neutral {
+  background: var(--grey-soft);
+  color: var(--muted);
+}
+
+/* Red: Overdue, Cancelled, Danger */
+.badge--overdue,
+.badge--cancelled,
+.badge--danger {
+  background: var(--red-soft);
+  color: var(--red);
+}
+

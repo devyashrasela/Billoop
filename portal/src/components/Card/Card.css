@@ -1,0 +1,80 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  padding: var(--space-5);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card__label {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-regular);
+}
+
+.card__value {
+  font-size: var(--fs-stat);
+  letter-spacing: -0.03em;
+  font-weight: var(--fw-regular);
+  color: var(--ink);
+  margin-top: var(--space-2);
+  line-height: 1.15;
+}
+
+.card__delta {
+  font-size: var(--fs-xs);
+  margin-top: var(--space-2);
+  color: var(--green);
+  font-weight: var(--fw-medium);
+}
+
+.card__delta--down {
+  color: var(--red);
+}
+
+/* Hero Variant (Gradient green as in reference) */
+.card--hero {
+  color: #ffffff;
+  border: 0;
+  background: var(--grad-hero);
+}
+
+.card--hero .card__label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.card--hero .card__value {
+  color: #ffffff;
+}
+
+.card--hero .card__delta {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Alert Variant (for Overdue or critical counters) */
+.card--alert {
+  border-color: var(--red-border);
+}
+
+.card--alert .card__value {
+  color: var(--red);
+}
+
+/* Grid helper for 4-column metric rows */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
