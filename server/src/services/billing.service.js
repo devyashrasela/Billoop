@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { env } from '../config/env.js';
 import { addMoney, subtractMoney, multiplyMoney } from '../utils/money.js';
+export { addMoney, subtractMoney, multiplyMoney } from '../utils/money.js';
 import { getNextSequenceNumber } from '../utils/numbering.js';
 import {
   sequelize,
