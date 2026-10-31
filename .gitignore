@@ -5,3 +5,5 @@ dist
 *.log
 .DS_Store
 server/certs/
+design-reference/
+PERSON_B_TASKS.md
