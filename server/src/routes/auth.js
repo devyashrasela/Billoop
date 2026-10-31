@@ -40,6 +40,7 @@ router.post(
 
 router.post(
   '/reset-password',
+  authLimiter,
   validate({ body: resetPasswordSchema }),
   asyncHandler(authController.resetPassword)
 );
