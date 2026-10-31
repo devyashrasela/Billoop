@@ -7,29 +7,47 @@
 ## 0. Prerequisites
 
 - Node.js **20 LTS or newer**, npm 10+
-- MySQL **8.x** running locally
+- An **Aiven for MySQL** service (hosted; **nothing runs locally**)
 - Git
 
 Verify:
 ```bash
-node -v && npm -v && mysql --version
+node -v && npm -v
 ```
 
-Create the database:
-```sql
-CREATE DATABASE brightloop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
+### Database: Aiven for MySQL (primary database)
+
+The database is hosted on Aiven. **Do not install or run MySQL locally.** The human owner will provide the service connection details. Never ask for them in chat logs or commit them; they go only in `server/.env`.
+
+1. From the Aiven console (service **Overview** page) the owner supplies:
+   - **Service URI**, of the form `mysql://avnadmin:<PASSWORD>@<HOST>:<PORT>/defaultdb?ssl-mode=REQUIRED`
+   - **CA certificate** (`ca.pem`, "Download" link next to the connection info)
+2. Save the CA certificate to `server/certs/ca.pem` (this folder is git-ignored).
+3. The app uses its own database, not `defaultdb`. Create it once (Aiven console → *Databases* → *Create database* named `brightloop`, or run the SQL below with any MySQL client using the Service URI). Then use `brightloop` as the database name in `DB_URL`:
+   ```sql
+   CREATE DATABASE brightloop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+4. For automated tests, create a second database `brightloop_test`. **Never run tests or destructive scripts against `brightloop`.**
+5. If the Aiven service has an IP allow-list enabled, add the developer machine's public IP.
+6. **SSL is mandatory.** Connections without it are rejected.
+7. Aiven MySQL enforces **primary keys on every table**, including join tables. All models must have a PK (the schema in `ARCHITECTURE.md` already does; keep it that way).
+8. Check the plan's **max connections** in the Aiven console; the pool size in `DB_POOL_MAX` must stay well below it.
 
 ---
 
 ## 1. Monorepo root
 
+**The repository already exists.** Work inside the existing repo root (the folder that currently contains `ARCHITECTURE.md`, `SETUP.md`, `LICENSE`, `.agents/` and `skills-lock.json`). Do **not** create a new `brightloop/` folder, run `git init`, or overwrite/delete any existing file.
+
+Leave these untouched: `.agents/`, `skills-lock.json`, `LICENSE`, `ARCHITECTURE.md`, `SETUP.md`. Do not add them to `.gitignore`.
+
+The root has no `package.json` yet. Create the workspace folders and a root manifest:
 ```bash
-mkdir brightloop && cd brightloop
-git init
+# from the existing repo root
 npm init -y
 mkdir server portal ops shared
 ```
+(The folder name on disk may differ from "brightloop"; that is fine. The npm package scope stays `@brightloop/*`.)
 
 Replace root `package.json` with:
 ```json
@@ -47,13 +65,14 @@ Replace root `package.json` with:
 }
 ```
 
-Root `.gitignore`:
+Root `.gitignore`: **create it if absent; if one exists, append the missing lines** (do not overwrite):
 ```
 node_modules
 dist
 .env
 *.log
 .DS_Store
+server/certs/
 ```
 
 ---
@@ -106,7 +125,7 @@ export const PAYMENT_METHODS = ['cash', 'bank_transfer', 'card', 'upi', 'cheque'
 cd ../server
 npm init -y
 npm i express cors helmet cookie-parser morgan dotenv sequelize mysql2 \
-      bcrypt jsonwebtoken zod nodemailer node-cron express-rate-limit
+      bcrypt jsonwebtoken zod nodemailer node-cron express-rate-limit umzug
 npm i -D nodemon
 ```
 
@@ -126,6 +145,7 @@ npm i -D nodemon
 
 Create the structure:
 ```bash
+mkdir -p certs src/migrations
 mkdir -p src/{config,models,controllers,services,routes/portal,routes/ops,middleware,validators,jobs,seeders,utils}
 touch src/app.js src/server.js
 touch src/config/{env.js,db.js,mail.js}
@@ -147,11 +167,10 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT) || 4000,
   db: {
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT) || 3306,
-    name: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    url: process.env.DB_URL,                         // Aiven service URI (database = brightloop)
+    sslCaPath: process.env.DB_SSL_CA_PATH,           // local dev: path to ca.pem
+    sslCa: process.env.DB_SSL_CA,                    // deployed: PEM contents as an env var
+    poolMax: Number(process.env.DB_POOL_MAX) || 8,
   },
   jwt: { accessSecret: process.env.JWT_ACCESS_SECRET, accessTtl: process.env.JWT_ACCESS_TTL || '15m' },
   refreshTtlDays: Number(process.env.REFRESH_TTL_DAYS) || 7,
@@ -163,15 +182,33 @@ export const env = {
 
 `src/config/db.js`
 ```js
+import fs from 'node:fs';
 import { Sequelize } from 'sequelize';
 import { env } from './env.js';
 
-export const sequelize = new Sequelize(env.db.name, env.db.user, env.db.password, {
-  host: env.db.host,
-  port: env.db.port,
+if (!env.db.url) throw new Error('DB_URL is not set (Aiven service URI)');
+
+// Aiven requires TLS. Prefer the PEM contents (deploys), fall back to a file (local dev).
+const ca = env.db.sslCa || (env.db.sslCaPath && fs.readFileSync(env.db.sslCaPath, 'utf8'));
+if (!ca) throw new Error('Set DB_SSL_CA or DB_SSL_CA_PATH (Aiven CA certificate)');
+
+export const sequelize = new Sequelize(env.db.url, {
   dialect: 'mysql',
+  dialectOptions: {
+    ssl: { ca, rejectUnauthorized: true },
+    connectTimeout: 15000,
+    dateStrings: false,
+  },
+  timezone: '+00:00',                                  // store and read everything in UTC
   logging: env.nodeEnv === 'development' ? console.log : false,
-  pool: { max: 15, min: 2, acquire: 30000, idle: 10000 },
+  pool: {
+    max: env.db.poolMax,   // keep below the Aiven plan's connection limit
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+    evict: 5000,           // drop idle connections before the server/proxy does
+  },
+  retry: { max: 3 },       // retry transient connection errors
   define: { underscored: false, freezeTableName: false },
 });
 ```
@@ -259,7 +296,7 @@ const start = async () => {
 start().catch((e) => { console.error('Startup failed', e); process.exit(1); });
 ```
 
-> Models, migrations and `sequelize.sync()` come in **Milestone 2**. For now only prove the DB connection works.
+> Models and **migrations (Umzug)** come in **Milestone 2**. For now only prove the Aiven connection works. **Never call `sequelize.sync()` against the Aiven database**; schema changes go through migrations only.
 
 ---
 
@@ -435,7 +472,8 @@ npm run dev:ops       # http://localhost:5174
 
 **Milestone 1 is done when:**
 - [ ] `GET http://localhost:4000/api/health` returns `{ ok: true, time }`
-- [ ] Server logs "MySQL connected"
+- [ ] Server logs "MySQL connected" using the Aiven URI over SSL (no local MySQL involved)
+- [ ] `server/certs/` and `.env` are git-ignored and not committed
 - [ ] Both apps load on 5173 and 5174 and show "API: OK" from the smoke-test page
 - [ ] No CORS errors in the browser console
 - [ ] Redux DevTools shows `api`, `auth`, `ui` in the store
