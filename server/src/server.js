@@ -1,10 +1,17 @@
 import app from './app.js';
 import { env } from './config/env.js';
 import { sequelize } from './config/db.js';
+import { startBillingJob } from './jobs/billing.job.js';
+import { startOverdueJob } from './jobs/overdue.job.js';
 
 const start = async () => {
   await sequelize.authenticate();
   console.log('MySQL connected');
+
+  // Start background jobs
+  startBillingJob();
+  startOverdueJob();
+
   app.listen(env.port, () => console.log(`API on http://localhost:${env.port}`));
 };
 
