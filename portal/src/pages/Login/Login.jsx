@@ -11,7 +11,7 @@ export const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/subscriptions';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +28,10 @@ export const Login = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <Link to="/" style={{ display: 'inline-block', marginBottom: '16px', color: 'var(--muted)', fontSize: '13px', textDecoration: 'none' }}>
+          ← Back to Brightloop Home
+        </Link>
+
         <div className="auth-header">
           <h1>Customer Portal</h1>
           <p>Sign in to manage your subscriptions and invoices</p>
@@ -61,19 +65,25 @@ export const Login = () => {
             />
           </div>
 
-          <div className="form-actions">
-            <Link to="/forgot-password" style={{ fontSize: 'var(--fs-sm)', color: 'var(--color-primary)' }}>
-              Forgot password?
-            </Link>
+          <div className="auth-links">
+            <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={isLoading}>
-            {isLoading ? 'Signing In...' : 'Sign In'}
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={isLoading}
+            style={{ width: '100%', marginTop: 'var(--space-4)' }}
+          >
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="auth-links">
-          <span>Don't have an account yet? <Link to="/register">Create Account</Link></span>
+        <div className="auth-footer" style={{ marginTop: 'var(--space-4)', textAlign: 'center', fontSize: 'var(--fs-sm)', color: 'var(--color-text-muted)' }}>
+          Don't have an account? <Link to="/register" style={{ color: 'var(--color-primary)' }}>Create one</Link>
+          <div style={{ marginTop: '10px' }}>
+            Looking for Ops Console? <a href="http://localhost:5174/login" style={{ color: 'var(--color-primary)' }}>Sign in to Ops ↗</a>
+          </div>
         </div>
       </div>
     </div>

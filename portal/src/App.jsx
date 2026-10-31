@@ -5,13 +5,14 @@ import { setBootstrapped } from './features/auth/authSlice';
 import { useRefreshMutation } from './services/endpoints/authApi';
 import ProtectedRoute from './routes/ProtectedRoute';
 
-// ── Person A pages ──
+// ── Public & Landing pages ──
+import Landing from './pages/Landing/Landing';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 
-// ── Person B pages ──
+// ── Protected Customer pages ──
 import PortalLayout from './components/Layout/PortalLayout';
 import SubscriptionList from './pages/Subscriptions/SubscriptionList';
 import SubscriptionDetail from './pages/Subscriptions/SubscriptionDetail';
@@ -37,7 +38,8 @@ export default function App() {
   return (
     <>
       <Routes>
-        {/* ── Public Auth Routes (Person A) ── */}
+        {/* ── Public Marketing & Auth Routes ── */}
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -46,7 +48,8 @@ export default function App() {
         {/* ── Protected Customer Routes ── */}
         <Route element={<ProtectedRoute />}>
           <Route element={<PortalLayout />}>
-            <Route path="/" element={<Navigate to="/subscriptions" replace />} />
+            <Route path="/portal" element={<Navigate to="/subscriptions" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/subscriptions" replace />} />
             <Route path="/subscriptions" element={<SubscriptionList />} />
             <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
             <Route path="/invoices" element={<InvoiceList />} />

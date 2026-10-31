@@ -26,7 +26,7 @@ export const Register = () => {
 
     try {
       await register(formData).unwrap();
-      navigate('/', { replace: true });
+      navigate('/subscriptions', { replace: true });
     } catch (err) {
       if (err.data?.fieldErrors) {
         const firstErr = Object.values(err.data.fieldErrors)[0];
@@ -40,6 +40,10 @@ export const Register = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <Link to="/" style={{ display: 'inline-block', marginBottom: '16px', color: 'var(--muted)', fontSize: '13px', textDecoration: 'none' }}>
+          ← Back to Brightloop Home
+        </Link>
+
         <div className="auth-header">
           <h1>Create Portal Account</h1>
           <p>Get instant access to your subscriptions and billing</p>
@@ -113,13 +117,13 @@ export const Register = () => {
             />
           </div>
 
-          <button type="submit" className="btn-primary" disabled={isLoading}>
+          <button type="submit" className="btn-primary" disabled={isLoading} style={{ width: '100%', marginTop: 'var(--space-2)' }}>
             {isLoading ? 'Creating Account...' : 'Register'}
           </button>
         </form>
 
-        <div className="auth-links">
-          <span>Already have an account? <Link to="/login">Sign In</Link></span>
+        <div className="auth-links" style={{ marginTop: 'var(--space-4)', textAlign: 'center', fontSize: 'var(--fs-sm)' }}>
+          <span>Already have an account? <Link to="/login" style={{ color: 'var(--color-primary)' }}>Sign In</Link></span>
         </div>
       </div>
     </div>
