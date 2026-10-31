@@ -15,6 +15,7 @@ import Reports from './pages/Reports/Reports';
 import Staff from './pages/Staff/Staff';
 
 // ── Person B pages ──
+import Customers from './pages/Customers/Customers';
 import Taxes from './pages/Taxes/Taxes';
 import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
 import Products from './pages/Products/Products';
@@ -60,6 +61,7 @@ export default function App() {
           />
 
           {/* ── Person B Catalog & Transaction Pages ── */}
+          <Route path="/customers" element={<Customers />} />
           <Route path="/products" element={<Products />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/templates" element={<Templates />} />

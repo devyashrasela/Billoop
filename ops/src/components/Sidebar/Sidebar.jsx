@@ -42,6 +42,20 @@ export const Sidebar = () => {
         </>
       )}
 
+      <div className="side__group">Customers & Sales</div>
+      <NavLink
+        to="/customers"
+        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+      >
+        Customers
+      </NavLink>
+      <NavLink
+        to="/subscriptions"
+        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+      >
+        Subscriptions
+      </NavLink>
+
       <div className="side__group">Catalog & Pricing</div>
       <NavLink
         to="/products"
