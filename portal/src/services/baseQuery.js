@@ -6,7 +6,7 @@ import { addToast } from '../features/ui/uiSlice';
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_URL,
+  baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:4000/api',
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.accessToken;
@@ -48,12 +48,16 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   }
 
   // Auto-toast mutation failures (422 validation, 409 conflicts, 400/403/500 errors)
+  // Skip toast for silent background auth refreshes
   if (result.error && result.error.status !== 401) {
     const isMutation =
       typeof args === 'object' &&
       ['POST', 'PUT', 'PATCH', 'DELETE'].includes(args.method?.toUpperCase());
 
-    if (isMutation) {
+    const url = typeof args === 'string' ? args : args?.url;
+    const isSilentAuth = url?.includes('/auth/refresh');
+
+    if (isMutation && !isSilentAuth && !extraOptions?.skipToast) {
       const errorData = result.error.data;
       let message = errorData?.message || errorData?.error;
       if (!message && errorData?.fieldErrors) {
@@ -70,4 +74,3 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   return result;
 };
-

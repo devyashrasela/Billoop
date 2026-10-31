@@ -21,7 +21,7 @@ export const Landing = () => {
     <div className="landing-container">
       <div className="landing-sheet">
         <div className="landing-wrap">
-          {/* ── Navigation Header ── */}
+          {/* ── Simplified Navigation Header ── */}
           <header className="landing-nav">
             <Link to="/" className="landing-logo">
               <i aria-hidden="true">
@@ -33,10 +33,11 @@ export const Landing = () => {
             <ul className="landing-nav-links">
               <li><a href="#features" onClick={() => setActiveTab(0)}>Why Brightloop?</a></li>
               <li><a href="#features" onClick={() => setActiveTab(0)}>Billing</a></li>
-              <li><a href="#features" onClick={() => setActiveTab(2)}>Portal</a></li>
+              <li><a href="#features" onClick={() => setActiveTab(2)}>Customer Portal</a></li>
               <li><a href="#features" onClick={() => setActiveTab(5)}>Reports</a></li>
             </ul>
 
+            {/* Only 2 clean actions: Sign In & Get Started (or user dashboard if already signed in) */}
             <div className="landing-nav-actions">
               {user ? (
                 <>
@@ -49,18 +50,11 @@ export const Landing = () => {
                 </>
               ) : (
                 <>
-                  <a
-                    href="http://localhost:5174/login"
-                    className="landing-btn landing-btn-ops"
-                    title="Staff & Admin Management"
-                  >
-                    Ops Login ↗
-                  </a>
                   <Link to="/login" className="landing-btn">
-                    Sign in →
+                    Sign In
                   </Link>
                   <Link to="/register" className="landing-btn landing-btn-primary">
-                    Get Started
+                    Get Started →
                   </Link>
                 </>
               )}
@@ -89,17 +83,13 @@ export const Landing = () => {
               ) : (
                 <>
                   <Link to="/register" className="landing-btn landing-btn-primary">
-                    Start Free Trial →
+                    Get Started Free →
                   </Link>
                   <Link to="/login" className="landing-btn">
-                    Customer Sign In
+                    Sign In
                   </Link>
                 </>
               )}
-            </div>
-            <div className="landing-ops-helper">
-              Are you an operator or administrator?{' '}
-              <a href="http://localhost:5174/login">Launch Brightloop Ops Console ↗</a>
             </div>
           </section>
 
@@ -126,41 +116,78 @@ export const Landing = () => {
                 Automatic Invoicing<br />&amp; Billing Runs
               </h2>
               <p>
-                Every due subscription becomes an invoice automatically, with customer details, product lines, taxes, and totals filled in. With database sequence locks and idempotency checks, nothing is billed twice or skipped.
+                Every due subscription becomes an invoice on its own, with customer details, product lines, taxes, and totals already filled in. Nothing is billed twice or skipped.
               </p>
               <Link to={user ? "/invoices" : "/register"} className="landing-btn">
-                {user ? "View Invoices →" : "Try Automatic Invoicing →"}
+                {user ? "View Invoices →" : "Start Invoicing →"}
               </Link>
             </div>
             <div className="landing-panel g1">
-              <img
-                src="/images/feature-billing.jpg"
-                alt="Automatic Billing and Compliance Engine"
-                className="landing-feature-img"
-              />
+              <div className="landing-stack">
+                <div className="landing-glass">
+                  <div className="landing-row">
+                    <small>SUB-2026-000123</small>
+                    <span style={{ fontSize: '11px', background: 'rgba(255,255,255,0.25)', padding: '2px 8px', borderRadius: '12px' }}>
+                      Auto-Generated
+                    </span>
+                  </div>
+                  <h3 style={{ marginTop: '4px' }}>Invoice Statement</h3>
+                </div>
+                <div className="landing-glass">
+                  <div className="landing-row">
+                    <span>Pro Plan (Monthly)</span>
+                    <b style={{ fontWeight: 500 }}>$199.00</b>
+                  </div>
+                </div>
+                <div className="landing-glass">
+                  <div className="landing-row">
+                    <span>GST Tax (18%)</span>
+                    <b style={{ fontWeight: 500 }}>+$35.82</b>
+                  </div>
+                </div>
+                <div className="landing-glass" style={{ background: 'rgba(255,255,255,0.4)' }}>
+                  <div className="landing-row">
+                    <span style={{ fontWeight: 600 }}>Total Balanced</span>
+                    <b style={{ fontSize: '18px', fontWeight: 600 }}>$234.82</b>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
 
-          {/* ── Tab 1: Pre-Bill Exception & Overdue Queue ── */}
+          {/* ── Tab 1: Overdue Invoice Queue ── */}
           <article className={`landing-slide ${activeTab === 1 ? 'on' : ''}`}>
             <div className="landing-copy">
               <span className="landing-pill">00 - 02</span>
               <h2>
-                Pre-Bill Exception<br />&amp; Overdue Queue
+                Overdue<br />Invoice Queue
               </h2>
               <p>
-                Before statements go out, an exception queue flags high variances, missing data, and overdue accounts. Catch issues upstream before customers ever see a bill, and automate payment chase alerts.
+                See which invoices are paid and which are still outstanding. Overdue accounts are flagged automatically so the team can chase them before they turn into lost revenue.
               </p>
-              <a href="http://localhost:5174/" className="landing-btn">
-                View Overdue Metrics in Ops ↗
-              </a>
+              <Link to={user ? "/invoices" : "/register"} className="landing-btn">
+                {user ? "Check Overdue Invoices →" : "Learn More →"}
+              </Link>
             </div>
             <div className="landing-panel g2">
-              <img
-                src="/images/feature-exceptions.jpg"
-                alt="Pre-Bill Exception Queue"
-                className="landing-feature-img"
-              />
+              <div className="landing-grid">
+                <div className="landing-glass ghost"></div>
+                <div className="landing-glass">
+                  <h3>Overdue<br />Invoices</h3>
+                  <div className="landing-warn" aria-hidden="true">⚠</div>
+                </div>
+                <div className="landing-glass ghost">
+                  <div className="landing-spin"></div>
+                </div>
+                <div className="landing-glass ghost">
+                  <div className="landing-spin"></div>
+                </div>
+                <div className="landing-glass">
+                  <h3>Payment<br />Recovery</h3>
+                  <div className="landing-warn" aria-hidden="true">⚡</div>
+                </div>
+                <div className="landing-glass ghost"></div>
+              </div>
             </div>
           </article>
 
@@ -172,55 +199,76 @@ export const Landing = () => {
                 Customer Portal<br />&amp; Self-Service
               </h2>
               <p>
-                Customers receive plain-English statements that show the math, with click-to-pay, autopay reminders, pause, and renew controls in a mobile-first portal that reduces support tickets and accelerates collections.
+                Customers see only their own subscriptions and invoices. They can pause, close, or renew where the plan allows, and print any invoice without emailing anyone.
               </p>
               <Link to="/login" className="landing-btn">
                 Open Customer Portal →
               </Link>
             </div>
             <div className="landing-panel g3">
-              <img
-                src="/images/feature-portal.jpg"
-                alt="Customer Portal and Support"
-                className="landing-feature-img"
-              />
+              <div className="landing-stack" style={{ width: 'min(340px, 100%)' }}>
+                <div className="landing-glass">
+                  <div className="landing-row">
+                    <h3>My Subscription</h3>
+                    <span style={{ fontSize: '11px', background: 'rgba(255,255,255,0.25)', padding: '2px 8px', borderRadius: '12px' }}>
+                      Active
+                    </span>
+                  </div>
+                  <small style={{ marginTop: '4px' }}>Scale Tier · Renews Monthly</small>
+                  <div className="landing-row" style={{ marginTop: '14px' }}>
+                    <button className="btn-glass">Pause</button>
+                    <button className="btn-glass">Renew</button>
+                  </div>
+                </div>
+                <div className="landing-glass">
+                  <div className="landing-row">
+                    <div>
+                      <small>Balance Due</small>
+                      <b style={{ fontWeight: 500, fontSize: '22px' }}>$223.00</b>
+                    </div>
+                    <Link to="/login" className="btn-glass" style={{ textDecoration: 'none' }}>
+                      View Invoice
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </article>
 
-          {/* ── Tab 3: Taxes & Compliance Engine ── */}
+          {/* ── Tab 3: Taxes & Discount Engine ── */}
           <article className={`landing-slide ${activeTab === 3 ? 'on' : ''}`}>
             <div className="landing-copy">
               <span className="landing-pill">00 - 04</span>
               <h2>
-                Taxes &amp; Compliance<br />Discount Engine
+                Taxes &amp;<br />Discount Engine
               </h2>
               <p>
-                Encodes tax handling (GST, VAT, state rules), fee caps, and discount rules per subscription, keeping a versioned audit trail so every charge is explainable and audit-ready.
+                Taxes are calculated from rules you set. Discounts apply to products or whole subscriptions, land on the next invoice automatically, and stop when they expire.
               </p>
-              <a href="http://localhost:5174/taxes" className="landing-btn">
-                Configure Tax Rules in Ops ↗
-              </a>
+              <Link to={user ? "/subscriptions" : "/register"} className="landing-btn">
+                {user ? "View Plans & Rates →" : "Explore Features →"}
+              </Link>
             </div>
             <div className="landing-panel g4">
               <div className="landing-duo">
                 <div className="landing-chips" style={{ width: '160px' }}>
                   <div className="landing-glass landing-chip">GST (18%)</div>
-                  <div className="landing-glass landing-chip">Promo (-15%)</div>
-                  <div className="landing-glass landing-chip">Variants</div>
-                  <div className="landing-glass landing-chip">Net-30 Terms</div>
+                  <div className="landing-glass landing-chip">Discount (-15%)</div>
+                  <div className="landing-glass landing-chip">Variant Extra</div>
+                  <div className="landing-glass landing-chip">Fixed Fee</div>
                 </div>
                 <div className="landing-glass" style={{ width: '220px', minHeight: '220px' }}>
-                  <h3>Sample Invoice</h3>
-                  <div className="landing-glass" style={{ marginTop: '12px', padding: '10px' }}>
-                    Pro Plan · $99.00
+                  <h3>Invoice</h3>
+                  <div className="landing-glass" style={{ marginTop: '14px', padding: '10px' }}>
+                    Pro Plan
                   </div>
-                  <div className="landing-glass" style={{ marginTop: '8px', padding: '10px' }}>
-                    Tax Added · +$17.82
+                  <div className="landing-glass" style={{ marginTop: '10px', padding: '10px' }}>
+                    Variant Extra
                   </div>
                 </div>
                 <div className="landing-lens">
-                  <b>$116.82</b>
-                  <small>Audit verified</small>
+                  <b>+$45.00</b>
+                  <small>Cap: $50.00</small>
                 </div>
               </div>
             </div>
@@ -231,13 +279,13 @@ export const Landing = () => {
             <div className="landing-copy">
               <span className="landing-pill">00 - 05</span>
               <h2>
-                Predictable Subscription<br />Lifecycle
+                Subscription<br />Lifecycle
               </h2>
               <p>
-                Each subscription moves predictably through Draft → Quotation → Confirmed → Active → Closed, backed by strict state transitions and locked sequence numbering. Anyone on the team can inspect history in real time.
+                Each subscription has its own number and moves predictably from Draft to Quotation to Confirmed to Active to Closed. Anyone on the team can see where it stands.
               </p>
               <Link to={user ? "/subscriptions" : "/register"} className="landing-btn">
-                {user ? "Manage Subscriptions →" : "Start Subscribing →"}
+                {user ? "Manage Subscriptions →" : "Get Started Now →"}
               </Link>
             </div>
             <div className="landing-panel g5">
@@ -251,26 +299,39 @@ export const Landing = () => {
             </div>
           </article>
 
-          {/* ── Tab 5: Lower All-in Cost & Revenue Reports ── */}
+          {/* ── Tab 5: Revenue & Reporting ── */}
           <article className={`landing-slide ${activeTab === 5 ? 'on' : ''}`}>
             <div className="landing-copy">
               <span className="landing-pill">00 - 06</span>
               <h2>
-                Lower All-in Cost<br />&amp; Revenue Analytics
+                Revenue &amp;<br />Reporting
               </h2>
               <p>
-                Compared to legacy, people-heavy workflows, Brightloop's end-to-end automation cuts cost-to-serve across invoice processing, billing, and support. Real-time MRR, ARR, and AR aging buckets keep executives informed.
+                One place to see active subscriptions, revenue, payments, and overdue invoices with filters and a summary view. Every report responds instantly.
               </p>
-              <a href="http://localhost:5174/reports" className="landing-btn">
-                Open Financial Reports ↗
-              </a>
+              <Link to={user ? "/subscriptions" : "/register"} className="landing-btn">
+                {user ? "View My Account →" : "Start Free Trial →"}
+              </Link>
             </div>
             <div className="landing-panel g6">
-              <img
-                src="/images/feature-automation.jpg"
-                alt="Automated Invoice Processing and Lower Cost to Serve"
-                className="landing-feature-img"
-              />
+              <div className="landing-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', width: 'min(400px, 100%)' }}>
+                <div className="landing-glass">
+                  <small>Active Subscriptions</small>
+                  <h3 style={{ fontSize: '24px', marginTop: '6px' }}>1,284</h3>
+                </div>
+                <div className="landing-glass">
+                  <small>Monthly Revenue</small>
+                  <h3 style={{ fontSize: '24px', marginTop: '6px' }}>$48,250</h3>
+                </div>
+                <div className="landing-glass">
+                  <small>Collections Rate</small>
+                  <h3 style={{ fontSize: '24px', marginTop: '6px' }}>99.2%</h3>
+                </div>
+                <div className="landing-glass">
+                  <small>Overdue Accounts</small>
+                  <h3 style={{ fontSize: '24px', marginTop: '6px', color: '#ffc8c4' }}>0</h3>
+                </div>
+              </div>
             </div>
           </article>
 
@@ -285,10 +346,10 @@ export const Landing = () => {
               ) : (
                 <>
                   <Link to="/register" className="landing-btn landing-btn-primary">
-                    Get started now →
+                    Get Started Free →
                   </Link>
                   <Link to="/login" className="landing-btn">
-                    Customer Sign In
+                    Sign In
                   </Link>
                 </>
               )}
@@ -306,7 +367,7 @@ export const Landing = () => {
                   Brightloop
                 </Link>
                 <p>
-                  One modern platform for plans, subscriptions, recurring invoices, payments, and real-time revenue analytics.
+                  One unified platform for plans, subscriptions, automated invoices, payments, and real-time revenue analytics.
                 </p>
               </div>
 
@@ -323,9 +384,9 @@ export const Landing = () => {
               <nav aria-label="Portals">
                 <h4>Access</h4>
                 <ul>
-                  <li><Link to="/login">Customer Portal Login</Link></li>
+                  <li><Link to="/login">Customer Sign In</Link></li>
                   <li><Link to="/register">Create Customer Account</Link></li>
-                  <li><a href="http://localhost:5174/login">Staff / Admin Ops Console</a></li>
+                  <li><a href="http://localhost:5174/login">Staff / Admin Ops Console ↗</a></li>
                   <li><Link to="/forgot-password">Reset Password</Link></li>
                 </ul>
               </nav>
