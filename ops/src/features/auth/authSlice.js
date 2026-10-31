@@ -6,7 +6,7 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, { payload }) => {
       state.user = payload.user;
-      state.role = payload.role;
+      state.role = payload.role || payload.user?.role || null;
       state.accessToken = payload.accessToken;
       state.bootstrapping = false;
     },
@@ -27,5 +27,6 @@ export const { setCredentials, logout, setBootstrapped } = authSlice.actions;
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectRole = (state) => state.auth.role;
 export const selectIsAdmin = (state) => state.auth.role === 'admin';
+export const selectIsBootstrapping = (state) => state.auth.bootstrapping;
 
 export default authSlice.reducer;
