@@ -14,7 +14,8 @@ import { recordAuditLog } from './audit.service.js';
 import { ApiError } from '../utils/ApiError.js';
 import { paginate, paginationMeta } from '../utils/pagination.js';
 import { getNextSequenceNumber } from '../utils/numbering.js';
-import { multiplyMoney, advancePeriod } from '../services/billing.service.js';
+import { multiplyMoney } from '../utils/money.js';
+import { advancePeriod } from '../services/billing.service.js';
 
 export const listSubscriptions = async (query = {}) => {
   const { page, limit, offset } = paginate(query);
