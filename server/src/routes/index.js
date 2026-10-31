@@ -5,7 +5,8 @@ import authRoutes from './auth.js';
 import staffRoutes from './ops/staff.js';
 
 // ── Person B routes ──
-// (Person B mounts catalog, customer, and transaction routes here)
+import taxRoutes from './ops/taxes.js';
+import paymentTermRoutes from './ops/paymentTerms.js';
 
 const router = Router();
 
@@ -17,5 +18,7 @@ router.use('/auth', authRoutes);
 router.use('/ops/staff', staffRoutes);
 
 // ── Person B mounts ──
+router.use('/ops/taxes', taxRoutes);
+router.use('/ops/payment-terms', paymentTermRoutes);
 
 export default router;

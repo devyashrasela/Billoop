@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, NavLink, Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBootstrapped } from './features/auth/authSlice';
 import { useRefreshMutation } from './services/endpoints/authApi';
@@ -11,7 +11,51 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 
 // ── Person B pages ──
-// (Person B imports catalog, subscription, and invoice pages here)
+import Taxes from './pages/Taxes/Taxes';
+import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
+import './AppLayout.css';
+
+function OpsLayout() {
+  return (
+    <div className="sheet">
+      <div className="app">
+        <aside className="side" aria-label="Main navigation">
+          <div className="logo">
+            <i aria-hidden="true">
+              <b></b><b></b><b></b><b></b>
+            </i>
+            Brightloop
+          </div>
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Dashboard
+          </NavLink>
+
+          <div className="side__group">Catalog & Settings</div>
+          <NavLink
+            to="/taxes"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Taxes
+          </NavLink>
+          <NavLink
+            to="/payment-terms"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Payment Terms
+          </NavLink>
+        </aside>
+
+        <main className="main">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const dispatch = useDispatch();
@@ -35,24 +79,26 @@ export default function App() {
 
       {/* ── Protected Ops Routes (Staff & Admin) ── */}
       <Route element={<ProtectedRoute allowedRoles={['admin', 'staff']} />}>
-        {/* Placeholder home redirect or dashboard */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route
-          path="/dashboard"
-          element={
-            <div style={{ padding: '2rem' }}>
-              <h2>Brightloop Operations Dashboard</h2>
-              <p>Welcome! Milestone M3 Auth is active.</p>
-            </div>
-          }
-        />
+        <Route element={<OpsLayout />}>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/dashboard"
+            element={
+              <div style={{ padding: '2rem' }}>
+                <h2>Brightloop Operations Dashboard</h2>
+                <p>Welcome! Milestone M3 Auth and Catalog Settings are active.</p>
+              </div>
+            }
+          />
 
-        {/* ── Person B routes ── */}
-        {/* (Person B will insert product, plan, customer, sub, and invoice routes here) */}
+          {/* ── Person B Catalog & Transaction Pages ── */}
+          <Route path="/taxes" element={<Taxes />} />
+          <Route path="/payment-terms" element={<PaymentTerms />} />
+        </Route>
       </Route>
 
       {/* ── Fallback ── */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
