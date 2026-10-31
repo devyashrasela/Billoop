@@ -16,6 +16,7 @@ import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
 import Products from './pages/Products/Products';
 import Plans from './pages/Plans/Plans';
 import Discounts from './pages/Discounts/Discounts';
+import Templates from './pages/Templates/Templates';
 import './AppLayout.css';
 
 function OpsLayout() {
@@ -49,6 +50,12 @@ function OpsLayout() {
             className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
           >
             Subscription Plans
+          </NavLink>
+          <NavLink
+            to="/templates"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Quotation Templates
           </NavLink>
           <NavLink
             to="/discounts"
@@ -107,7 +114,7 @@ export default function App() {
             element={
               <div style={{ padding: '2rem' }}>
                 <h2>Brightloop Operations Dashboard</h2>
-                <p>Welcome! Milestone M3 Auth and Catalog Settings are active.</p>
+                <p>Welcome! Milestone M3 Auth and Catalog Engine are active.</p>
               </div>
             }
           />
@@ -115,6 +122,7 @@ export default function App() {
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/products" element={<Products />} />
           <Route path="/plans" element={<Plans />} />
+          <Route path="/templates" element={<Templates />} />
           <Route path="/discounts" element={<Discounts />} />
           <Route path="/taxes" element={<Taxes />} />
           <Route path="/payment-terms" element={<PaymentTerms />} />

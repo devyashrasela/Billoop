@@ -1,0 +1,128 @@
+.templates-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.templates-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.templates-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.templates-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.template-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.template-line-count {
+  font-size: var(--fs-xs);
+  padding: 2px 8px;
+  background: var(--grey-soft);
+  color: var(--muted);
+  border-radius: var(--r-pill);
+}
+
+.template-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.template-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.template-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.template-lines-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.lines-box-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+}
+
+.lines-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-btn);
+  background: #ffffff;
+}
+
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+
+.mini-table th {
+  background: var(--surface);
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.mini-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.mini-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.line-draft-inputs {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
+  background: #ffffff;
+  padding: var(--space-3);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-btn);
+}
+
+.d-block {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .template-form__row {
+    grid-template-columns: 1fr;
+  }
+}
