@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useInvoicePrint } from '@brightloop/shared/useInvoicePrint.js';
+import { baseQueryWithReauth } from '../../services/baseQuery';
+import { addToast } from '../../features/ui/uiSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { useGetPortalInvoicesQuery } from '../../services/endpoints/portalApi';
 import { Table, Button, Badge, Chip } from '../../components';
@@ -12,6 +15,7 @@ const STATUS_FILTERS = [
 
 export default function InvoiceList() {
   const navigate = useNavigate();
+  const printInvoice = useInvoicePrint(baseQueryWithReauth, addToast, 'portal');
   const [page, setPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState('');
 
@@ -52,7 +56,7 @@ export default function InvoiceList() {
 
   const handlePrint = (e, invId) => {
     e.stopPropagation();
-    window.open(`/api/portal/invoices/${invId}/print`, '_blank', 'noopener,noreferrer');
+    return printInvoice(invId);
   };
 
   const columns = [

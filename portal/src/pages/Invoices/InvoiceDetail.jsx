@@ -1,4 +1,7 @@
 import React from 'react';
+import { useInvoicePrint } from '@brightloop/shared/useInvoicePrint.js';
+import { baseQueryWithReauth } from '../../services/baseQuery';
+import { addToast } from '../../features/ui/uiSlice';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useGetPortalInvoiceQuery } from '../../services/endpoints/portalApi';
 import { Button, Badge, Card } from '../../components';
@@ -7,6 +10,7 @@ import './InvoiceDetail.css';
 export default function InvoiceDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const printInvoice = useInvoicePrint(baseQueryWithReauth, addToast, 'portal');
 
   const { data: invoice, isLoading, error } = useGetPortalInvoiceQuery(id);
 
@@ -42,7 +46,7 @@ export default function InvoiceDetail() {
   const balanceDue = Math.max(0, total - amountPaid);
 
   const handlePrint = () => {
-    window.open(`/api/portal/invoices/${invoice.id}/print`, '_blank', 'noopener,noreferrer');
+    return printInvoice(invoice.id);
   };
 
   return (

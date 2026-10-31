@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useInvoicePrint } from '@brightloop/shared/useInvoicePrint.js';
+import { baseQueryWithReauth } from '../../services/baseQuery';
+import { addToast } from '../../features/ui/uiSlice';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   useGetInvoiceQuery,
@@ -19,6 +22,7 @@ import './InvoiceDetail.css';
 export default function InvoiceDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const printInvoice = useInvoicePrint(baseQueryWithReauth, addToast, 'ops');
 
   const { data: invoice, isLoading, error } = useGetInvoiceQuery(id);
   const [confirmInvoice, { isLoading: isConfirming }] = useConfirmInvoiceMutation();
@@ -88,8 +92,7 @@ export default function InvoiceDetail() {
   };
 
   const handlePrint = () => {
-    const printUrl = `/api/ops/invoices/${invoice.id}/print`;
-    window.open(printUrl, '_blank', 'noopener,noreferrer');
+    return printInvoice(invoice.id);
   };
 
   return (
