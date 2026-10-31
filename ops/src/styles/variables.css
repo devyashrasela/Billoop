@@ -1,47 +1,110 @@
 :root {
-  /* Brand */
-  --color-primary: #4f46e5;
-  --color-primary-hover: #4338ca;
-  --color-primary-soft: #eef2ff;
-  --color-accent: #0ea5e9;
+  /* ===== Theme: Warm Editorial Modern (matching design reference) ===== */
+  --bg-dark: #121212;
+  --bg-dark-grid: #2b2b2b;
+  --sheet: #ecebe6;
+  --surface: #f6f5f1;
+  --surface-hover: #ffffff;
+  --line: #d9d8d1;
+  --ink: #1a1a18;
+  --muted: #6f6e68;
 
-  /* Semantic */
-  --color-success: #16a34a;
-  --color-warning: #d97706;
-  --color-danger:  #dc2626;
-  --color-info:    #0284c7;
+  /* Brand Accents */
+  --green: #1f7a4d;
+  --green-hi: #13a064;
+  --green-hover: #176a42;
+  --green-soft: #dcefe3;
 
-  /* Neutrals */
-  --color-bg: #f8fafc;
-  --color-surface: #ffffff;
-  --color-border: #e2e8f0;
-  --color-text: #0f172a;
-  --color-text-muted: #64748b;
+  --red: #b3261e;
+  --red-hover: #961f18;
+  --red-soft: #f6dcd9;
+  --red-border: #e3b9b5;
+
+  --amber: #8a5a00;
+  --amber-soft: #f5e6c4;
+
+  --blue: #2c5fa8;
+  --blue-soft: #dbe6f5;
+
+  --grey-soft: #e1e0da;
+
+  /* Aliased Semantic Colors for compatibility */
+  --color-primary: var(--green);
+  --color-primary-hover: var(--green-hover);
+  --color-primary-soft: var(--green-soft);
+  --color-accent: var(--green-hi);
+
+  --color-success: var(--green);
+  --color-warning: var(--amber);
+  --color-danger: var(--red);
+  --color-info: var(--blue);
+
+  --color-bg: var(--sheet);
+  --color-surface: var(--surface);
+  --color-border: var(--line);
+  --color-text: var(--ink);
+  --color-text-muted: var(--muted);
 
   /* Typography */
-  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --fs-xs: 0.75rem;  --fs-sm: 0.875rem; --fs-md: 1rem;
-  --fs-lg: 1.25rem;  --fs-xl: 1.5rem;   --fs-2xl: 2rem;
-  --fw-regular: 400; --fw-medium: 500;  --fw-bold: 700;
+  --fs-xs: 0.75rem;     /* 12px */
+  --fs-sm: 0.8125rem;   /* 13px */
+  --fs-base: 0.875rem;  /* 14px */
+  --fs-md: 1rem;        /* 16px */
+  --fs-lg: 1.125rem;    /* 18px */
+  --fs-xl: 1.25rem;     /* 20px */
+  --fs-2xl: 1.625rem;   /* 26px */
+  --fs-3xl: 2rem;       /* 32px */
+  --fs-stat: 1.875rem;  /* 30px */
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 600;
   --lh-base: 1.5;
 
-  /* Spacing scale */
-  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
-  --space-5: 1.5rem;  --space-6: 2rem;   --space-7: 3rem;
+  /* Spacing */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;  /* 20px */
+  --space-6: 1.5rem;   /* 24px */
+  --space-7: 2rem;     /* 32px */
+  --space-8: 3rem;     /* 48px */
+  --pad: clamp(16px, 2.5vw, 32px);
 
-  /* Shape + depth */
-  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
-  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.08);
+  /* Shape & Radii */
+  --r-sheet: 28px;
+  --r-card: 12px;
+  --r-panel: 10px;
+  --r-glass: 16px;
+  --r-btn: 8px;
+  --r-pill: 999px;
+
+  --radius-sm: var(--r-btn);
+  --radius-md: var(--r-panel);
+  --radius-lg: var(--r-card);
+  --radius-pill: var(--r-pill);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.06);
+  --shadow-modal: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  /* Gradients */
+  --grad-hero: radial-gradient(70% 70% at 15% 0, #52c689, #0000), radial-gradient(60% 60% at 95% 100%, #1fa07f, #0000), #1b9d78;
 
   /* Layout */
-  --sidebar-width: 240px;
-  --header-height: 56px;
-  --container-max: 1200px;
+  --sidebar-width: 230px;
+  --header-height: 60px;
+  --container-max: 1280px;
 
-  /* Motion + layering */
+  /* Transitions */
   --transition-fast: 120ms ease;
   --transition-base: 200ms ease;
-  --z-dropdown: 100; --z-modal: 200; --z-toast: 300;
+
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-toast: 300;
 }

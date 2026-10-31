@@ -1,0 +1,103 @@
+.table-container {
+  width: 100%;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  text-align: left;
+}
+
+.table th {
+  font-weight: var(--fw-regular);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-size: var(--fs-base);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr {
+  transition: background var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.table__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table__empty {
+  text-align: center;
+  padding: var(--space-7) var(--space-4) !important;
+  color: var(--muted);
+  font-size: var(--fs-base);
+}
+
+/* Row-level alerts (e.g. Overdue indicator) */
+.table__row--overdue {
+  box-shadow: inset 3px 0 var(--red);
+}
+
+/* Skeleton loader bar */
+.skel {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--grey-soft), #f1f0eb, var(--grey-soft));
+  background-size: 200% 100%;
+  animation: sk 1.4s linear infinite;
+}
+
+@keyframes sk {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skel {
+    animation: none;
+  }
+}
+
+/* Pager footer */
+.pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pager__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
