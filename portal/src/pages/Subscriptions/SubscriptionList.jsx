@@ -56,7 +56,9 @@ export default function SubscriptionList() {
             label={f.label}
             active={selectedStatus === f.key}
             onClick={() => setSelectedStatus(f.key)}
-          />
+          >
+            {f.label}
+          </Chip>
         ))}
       </div>
 

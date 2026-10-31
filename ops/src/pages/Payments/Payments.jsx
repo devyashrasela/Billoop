@@ -128,7 +128,9 @@ export default function Payments() {
                 setSelectedMethod(f.key);
                 setPage(1);
               }}
-            />
+            >
+              {f.label}
+            </Chip>
           ))}
         </div>
 

@@ -142,7 +142,9 @@ export default function Subscriptions() {
                 setSelectedStatus(f.key);
                 setPage(1);
               }}
-            />
+            >
+              {f.label}
+            </Chip>
           ))}
         </div>
 

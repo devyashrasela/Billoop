@@ -140,7 +140,9 @@ export default function InvoiceList() {
               setSelectedStatus(f.key);
               setPage(1);
             }}
-          />
+          >
+            {f.label}
+          </Chip>
         ))}
       </div>
 

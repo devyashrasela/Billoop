@@ -183,7 +183,9 @@ export default function Invoices() {
                 setSelectedStatus(f.key);
                 setPage(1);
               }}
-            />
+            >
+              {f.label}
+            </Chip>
           ))}
         </div>
 

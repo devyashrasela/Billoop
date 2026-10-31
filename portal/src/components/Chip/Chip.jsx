@@ -5,6 +5,7 @@ import './Chip.css';
  * Filter Chip / Segmented Toggle Button as seen in the toolbar filter.
  */
 export function Chip({
+  label,
   children,
   active = false,
   onClick,
@@ -19,7 +20,7 @@ export function Chip({
       onClick={onClick}
       {...props}
     >
-      {children}
+      {children || label}
     </button>
   );
 }
