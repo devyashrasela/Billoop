@@ -22,3 +22,4 @@ export const paymentTermIdParamSchema = z.object({
     id: z.coerce.number().positive(),
   }),
 });
+

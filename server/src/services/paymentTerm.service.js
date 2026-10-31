@@ -62,3 +62,4 @@ export const deletePaymentTerm = async (id) => {
   await term.destroy();
   return { id, message: 'Payment term deleted successfully' };
 };
+

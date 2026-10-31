@@ -56,3 +56,4 @@ export const {
   useUpdateTaxMutation,
   useDeleteTaxMutation,
 } = taxApi;
+

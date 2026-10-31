@@ -67,3 +67,4 @@ export const deleteTax = async (id) => {
   await tax.destroy();
   return { id, message: 'Tax deleted successfully' };
 };
+
