@@ -6,8 +6,8 @@
     "dev:server": "npm run dev -w server",
     "dev:portal": "npm run dev -w portal",
     "dev:ops": "npm run dev -w ops",
+    "migrate": "npm run migrate -w server",
     "seed": "npm run seed -w server",
     "test": "npm run test -w server"
   }
 }
-

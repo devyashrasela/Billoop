@@ -22,5 +22,8 @@ export const env = {
   opsUrl: process.env.OPS_URL,
   billingCron: process.env.BILLING_CRON || '0 1 * * *',
   billingAutoConfirm: process.env.BILLING_AUTO_CONFIRM !== 'false',
+  seed: {
+    adminEmail: process.env.SEED_ADMIN_EMAIL || 'admin@brightloop.test',
+    adminPassword: process.env.SEED_ADMIN_PASSWORD || 'Admin@12345',
+  },
 };
-

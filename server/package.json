@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "migrate": "node src/migrations/index.js",
+    "migrate:down": "node src/migrations/index.js down",
     "seed": "node src/seeders/index.js",
     "test": "node --test"
   },
