@@ -1,0 +1,59 @@
+.ops-header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--line, var(--color-border));
+  background: var(--surface, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ops-header-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-medium);
+  color: var(--ink, var(--color-text));
+}
+
+.ops-header-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.user-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+}
+
+.badge-admin {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-staff {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.btn-logout {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.btn-logout:hover {
+  background: var(--color-danger);
+  color: #ffffff;
+  border-color: var(--color-danger);
+}

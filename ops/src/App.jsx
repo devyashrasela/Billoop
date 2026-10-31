@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, NavLink, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setBootstrapped } from './features/auth/authSlice';
 import { useRefreshMutation } from './services/endpoints/authApi';
 import ProtectedRoute from './routes/ProtectedRoute';
 
-// ── Person A pages ──
+// ── Person A components & pages ──
+import OpsLayout from './components/Layout/OpsLayout';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Reports from './pages/Reports/Reports';
+import Staff from './pages/Staff/Staff';
 
 // ── Person B pages ──
 import Taxes from './pages/Taxes/Taxes';
@@ -19,79 +21,6 @@ import Products from './pages/Products/Products';
 import Plans from './pages/Plans/Plans';
 import Discounts from './pages/Discounts/Discounts';
 import Templates from './pages/Templates/Templates';
-import './AppLayout.css';
-
-function OpsLayout() {
-  return (
-    <div className="sheet">
-      <div className="app">
-        <aside className="side" aria-label="Main navigation">
-          <div className="logo">
-            <i aria-hidden="true">
-              <b></b><b></b><b></b><b></b>
-            </i>
-            Brightloop
-          </div>
-
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/reports"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Reports & Analytics
-          </NavLink>
-
-          <div className="side__group">Catalog & Settings</div>
-          <NavLink
-            to="/products"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Products & Variants
-          </NavLink>
-          <NavLink
-            to="/plans"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Subscription Plans
-          </NavLink>
-          <NavLink
-            to="/templates"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Quotation Templates
-          </NavLink>
-          <NavLink
-            to="/discounts"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Discounts & Coupons
-          </NavLink>
-          <NavLink
-            to="/taxes"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Taxes
-          </NavLink>
-          <NavLink
-            to="/payment-terms"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Payment Terms
-          </NavLink>
-        </aside>
-
-        <main className="main">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
-}
 
 export default function App() {
   const dispatch = useDispatch();
@@ -119,6 +48,16 @@ export default function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/reports" element={<Reports />} />
+
+          {/* Admin-only Staff Management */}
+          <Route
+            path="/staff"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Staff />
+              </ProtectedRoute>
+            }
+          />
 
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/products" element={<Products />} />
