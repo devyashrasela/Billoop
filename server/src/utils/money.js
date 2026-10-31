@@ -122,3 +122,4 @@ export const calculateDiscount = ({ baseAmount, value, type }) => {
   // Discount never exceeds base
   return fromCents(Math.min(baseCents, discountCents));
 };
+

@@ -503,3 +503,4 @@ export const down = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('refresh_tokens');
   await queryInterface.dropTable('users');
 };
+

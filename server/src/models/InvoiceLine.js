@@ -74,3 +74,4 @@ InvoiceLine.init(
     ],
   }
 );
+

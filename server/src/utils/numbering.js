@@ -77,3 +77,4 @@ export const getNextSequenceNumber = async ({
   const paddedNum = String(nextVal).padStart(padLength, '0');
   return `${config.codePrefix}-${year}-${paddedNum}`;
 };
+

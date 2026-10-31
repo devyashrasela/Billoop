@@ -24,3 +24,4 @@ const run = async () => {
 };
 
 run();
+

@@ -44,3 +44,4 @@ test('Models Registry - key associations are configured', () => {
   assert.ok(Invoice.associations.payments, 'Invoice should have payments association');
   assert.ok(Product.associations.variants, 'Product should have variants association');
 });
+

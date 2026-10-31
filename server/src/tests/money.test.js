@@ -71,3 +71,4 @@ test('Money Utilities - calculateDiscount', () => {
     30.0
   );
 });
+

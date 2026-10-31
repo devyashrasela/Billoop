@@ -26,3 +26,4 @@ export const migrator = new Umzug({
   storage: new SequelizeStorage({ sequelize, tableName: 'SequelizeMeta' }),
   logger: console,
 });
+

@@ -73,3 +73,4 @@ test('getNextSequenceNumber throws if no transaction provided', async () => {
     { message: 'A database transaction is required to generate sequence numbers safely.' }
   );
 });
+

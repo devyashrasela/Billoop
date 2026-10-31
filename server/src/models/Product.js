@@ -53,3 +53,4 @@ Product.init(
     ],
   }
 );
+
