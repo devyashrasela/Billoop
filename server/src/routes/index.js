@@ -15,6 +15,7 @@ import planRoutes from './ops/plans.js';
 import discountRoutes from './ops/discounts.js';
 import templateRoutes from './ops/templates.js';
 import customerRoutes from './ops/customers.js';
+import subscriptionRoutes from './ops/subscriptions.js';
 
 const router = Router();
 
@@ -36,5 +37,6 @@ router.use('/ops/plans', planRoutes);
 router.use('/ops/discounts', discountRoutes);
 router.use('/ops/templates', templateRoutes);
 router.use('/ops/customers', customerRoutes);
+router.use('/ops/subscriptions', subscriptionRoutes);
 
 export default router;

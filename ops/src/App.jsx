@@ -22,6 +22,9 @@ import Products from './pages/Products/Products';
 import Plans from './pages/Plans/Plans';
 import Discounts from './pages/Discounts/Discounts';
 import Templates from './pages/Templates/Templates';
+import Subscriptions from './pages/Subscriptions/Subscriptions';
+import SubscriptionDetail from './pages/Subscriptions/SubscriptionDetail';
+import SubscriptionCreate from './pages/Subscriptions/SubscriptionCreate';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -62,6 +65,9 @@ export default function App() {
 
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/customers" element={<Customers />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/subscriptions/new" element={<SubscriptionCreate />} />
+          <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
           <Route path="/products" element={<Products />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/templates" element={<Templates />} />
