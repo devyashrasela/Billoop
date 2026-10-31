@@ -1,0 +1,44 @@
+.terms-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.terms-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.terms-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.terms-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.term-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.term-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.term-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
