@@ -19,6 +19,7 @@ import InvoiceList from './pages/Invoices/InvoiceList';
 import InvoiceDetail from './pages/Invoices/InvoiceDetail';
 import PlanBrowser from './pages/Plans/PlanBrowser';
 import Profile from './pages/Profile/Profile';
+import { ToastContainer } from './components';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -34,28 +35,31 @@ export default function App() {
   }, [refresh, dispatch]);
 
   return (
-    <Routes>
-      {/* ── Public Auth Routes (Person A) ── */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+    <>
+      <Routes>
+        {/* ── Public Auth Routes (Person A) ── */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* ── Protected Customer Routes ── */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<PortalLayout />}>
-          <Route path="/" element={<Navigate to="/subscriptions" replace />} />
-          <Route path="/subscriptions" element={<SubscriptionList />} />
-          <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
-          <Route path="/invoices" element={<InvoiceList />} />
-          <Route path="/invoices/:id" element={<InvoiceDetail />} />
-          <Route path="/plans" element={<PlanBrowser />} />
-          <Route path="/profile" element={<Profile />} />
+        {/* ── Protected Customer Routes ── */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<PortalLayout />}>
+            <Route path="/" element={<Navigate to="/subscriptions" replace />} />
+            <Route path="/subscriptions" element={<SubscriptionList />} />
+            <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
+            <Route path="/invoices" element={<InvoiceList />} />
+            <Route path="/invoices/:id" element={<InvoiceDetail />} />
+            <Route path="/plans" element={<PlanBrowser />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* ── Fallback ── */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* ── Fallback ── */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ToastContainer />
+    </>
   );
 }
