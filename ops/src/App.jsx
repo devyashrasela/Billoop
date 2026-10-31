@@ -9,6 +9,8 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Reports from './pages/Reports/Reports';
 
 // ── Person B pages ──
 import Taxes from './pages/Taxes/Taxes';
@@ -36,6 +38,12 @@ function OpsLayout() {
             className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
           >
             Dashboard
+          </NavLink>
+          <NavLink
+            to="/reports"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Reports & Analytics
           </NavLink>
 
           <div className="side__group">Catalog & Settings</div>
@@ -109,15 +117,8 @@ export default function App() {
       <Route element={<ProtectedRoute allowedRoles={['admin', 'staff']} />}>
         <Route element={<OpsLayout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="/dashboard"
-            element={
-              <div style={{ padding: '2rem' }}>
-                <h2>Brightloop Operations Dashboard</h2>
-                <p>Welcome! Milestone M3 Auth and Catalog Engine are active.</p>
-              </div>
-            }
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/reports" element={<Reports />} />
 
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/products" element={<Products />} />
