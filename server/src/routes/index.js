@@ -4,6 +4,8 @@ import { Router } from 'express';
 import authRoutes from './auth.js';
 import staffRoutes from './ops/staff.js';
 import billingRoutes from './ops/billing.js';
+import dashboardRoutes from './ops/dashboard.js';
+import reportRoutes from './ops/reports.js';
 
 // ── Person B routes ──
 import taxRoutes from './ops/taxes.js';
@@ -22,6 +24,8 @@ router.get('/health', (req, res) => res.json({ ok: true, time: new Date().toISOS
 router.use('/auth', authRoutes);
 router.use('/ops/staff', staffRoutes);
 router.use('/ops/billing', billingRoutes);
+router.use('/ops/dashboard', dashboardRoutes);
+router.use('/ops/reports', reportRoutes);
 
 // ── Person B mounts ──
 router.use('/ops/taxes', taxRoutes);
