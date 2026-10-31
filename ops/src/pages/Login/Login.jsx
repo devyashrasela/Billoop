@@ -28,6 +28,19 @@ export const Login = () => {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <a
+          href="http://localhost:5173/"
+          style={{
+            display: 'inline-block',
+            marginBottom: '16px',
+            color: 'var(--muted, #6f6e68)',
+            fontSize: '13px',
+            textDecoration: 'none',
+          }}
+        >
+          ← Back to Brightloop Home
+        </a>
+
         <div className="auth-header">
           <h1>Brightloop Ops</h1>
           <p>Sign in to manage subscriptions, billing & operations</p>
@@ -67,10 +80,17 @@ export const Login = () => {
             </Link>
           </div>
 
-          <button type="submit" className="btn-primary" disabled={isLoading}>
+          <button type="submit" className="btn-primary" disabled={isLoading} style={{ width: '100%', marginTop: 'var(--space-2)' }}>
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ marginTop: '20px', textAlign: 'center', fontSize: 'var(--fs-sm)', color: 'var(--color-text-muted)' }}>
+          Are you a customer?{' '}
+          <a href="http://localhost:5173/login" style={{ color: 'var(--color-primary)' }}>
+            Customer Portal ↗
+          </a>
+        </div>
       </div>
     </div>
   );
