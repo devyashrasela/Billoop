@@ -16,3 +16,4 @@ router.put('/:id', validate(updateTaxSchema), taxController.updateTax);
 router.delete('/:id', validate(taxIdParamSchema), taxController.deleteTax);
 
 export default router;
+

@@ -25,3 +25,4 @@ export const deletePaymentTerm = asyncHandler(async (req, res) => {
   const result = await paymentTermService.deletePaymentTerm(req.params.id);
   res.json(result);
 });
+

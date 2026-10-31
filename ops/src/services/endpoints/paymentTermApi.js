@@ -56,3 +56,4 @@ export const {
   useUpdatePaymentTermMutation,
   useDeletePaymentTermMutation,
 } = paymentTermApi;
+

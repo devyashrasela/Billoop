@@ -16,3 +16,4 @@ router.put('/:id', validate(updatePaymentTermSchema), paymentTermController.upda
 router.delete('/:id', validate(paymentTermIdParamSchema), paymentTermController.deletePaymentTerm);
 
 export default router;
+

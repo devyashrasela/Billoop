@@ -25,3 +25,4 @@ export const deleteTax = asyncHandler(async (req, res) => {
   const result = await taxService.deleteTax(req.params.id);
   res.json(result);
 });
+
