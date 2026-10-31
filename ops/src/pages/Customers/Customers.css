@@ -1,0 +1,78 @@
+.customers-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.customers-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.customers-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.customers-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.customers-page__search-bar {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.customer-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.customer-company {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.customer-email {
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+.customer-phone {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.customer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.customer-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.customer-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+@media (max-width: 640px) {
+  .customer-form__row {
+    grid-template-columns: 1fr;
+  }
+}
