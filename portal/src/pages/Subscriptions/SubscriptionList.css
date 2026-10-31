@@ -1,0 +1,110 @@
+.portal-sub-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.portal-sub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.portal-sub-header h1 {
+  font-size: var(--fs-2xl, 1.625rem);
+  font-weight: var(--fw-bold, 700);
+  margin: 0 0 0.25rem 0;
+  color: var(--ink, #1a1a18);
+}
+
+.portal-sub-header p {
+  color: var(--muted, #6f6e68);
+  margin: 0;
+  font-size: var(--fs-base, 0.875rem);
+}
+
+.portal-sub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+}
+
+.portal-sub-card {
+  background: var(--surface, #f6f5f1);
+  border: 1px solid var(--line, #d9d8d1);
+  border-radius: var(--radius-lg, 8px);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.portal-sub-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.portal-sub-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.portal-sub-card__title {
+  font-size: var(--fs-lg, 1.125rem);
+  font-weight: var(--fw-bold, 700);
+  color: var(--ink, #1a1a18);
+  margin: 0 0 0.25rem 0;
+}
+
+.portal-sub-card__number {
+  font-size: var(--fs-xs, 0.75rem);
+  font-family: var(--font-mono);
+  color: var(--muted, #6f6e68);
+}
+
+.portal-sub-card__price {
+  font-size: var(--fs-2xl, 1.625rem);
+  font-weight: var(--fw-bold, 700);
+  color: var(--green, #1f7a4d);
+  margin-bottom: 1rem;
+}
+
+.portal-sub-card__price small {
+  font-size: var(--fs-sm, 0.8125rem);
+  font-weight: var(--fw-normal, 400);
+  color: var(--muted, #6f6e68);
+}
+
+.portal-sub-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: var(--fs-sm, 0.8125rem);
+  border-top: 1px dashed var(--line, #d9d8d1);
+  padding-top: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.portal-sub-card__row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted, #6f6e68);
+}
+
+.portal-sub-card__row strong {
+  color: var(--ink, #1a1a18);
+}
+
+.portal-empty-card {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--surface, #f6f5f1);
+  border: 1px dashed var(--line, #d9d8d1);
+  border-radius: var(--radius-lg, 8px);
+}

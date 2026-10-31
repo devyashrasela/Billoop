@@ -18,6 +18,7 @@ import customerRoutes from './ops/customers.js';
 import subscriptionRoutes from './ops/subscriptions.js';
 import invoiceRoutes from './ops/invoices.js';
 import paymentRoutes from './ops/payments.js';
+import portalRoutes from './portal/index.js';
 
 const router = Router();
 
@@ -42,5 +43,6 @@ router.use('/ops/customers', customerRoutes);
 router.use('/ops/subscriptions', subscriptionRoutes);
 router.use('/ops/invoices', invoiceRoutes);
 router.use('/ops/payments', paymentRoutes);
+router.use('/portal', portalRoutes);
 
 export default router;
