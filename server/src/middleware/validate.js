@@ -1,5 +1,18 @@
 import { ApiError } from '../utils/ApiError.js';
 
+const setRequestProperty = (req, prop, value) => {
+  try {
+    req[prop] = value;
+  } catch {
+    Object.defineProperty(req, prop, {
+      value,
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+  }
+};
+
 /**
  * Zod validation middleware factory.
  * Accepts either:
@@ -19,9 +32,9 @@ export const validate = (schemas) => {
           params: req.params,
         });
 
-        if (parsed.body !== undefined) req.body = parsed.body;
-        if (parsed.query !== undefined) req.query = parsed.query;
-        if (parsed.params !== undefined) req.params = parsed.params;
+        if (parsed.body !== undefined) setRequestProperty(req, 'body', parsed.body);
+        if (parsed.query !== undefined) setRequestProperty(req, 'query', parsed.query);
+        if (parsed.params !== undefined) setRequestProperty(req, 'params', parsed.params);
 
         return next();
       }
@@ -37,7 +50,7 @@ export const validate = (schemas) => {
             fieldErrors[field] = issue.message;
           });
         } else {
-          req.body = result.data;
+          setRequestProperty(req, 'body', result.data);
         }
       }
 
@@ -49,7 +62,7 @@ export const validate = (schemas) => {
             fieldErrors[field] = issue.message;
           });
         } else {
-          req.query = result.data;
+          setRequestProperty(req, 'query', result.data);
         }
       }
 
@@ -61,7 +74,7 @@ export const validate = (schemas) => {
             fieldErrors[field] = issue.message;
           });
         } else {
-          req.params = result.data;
+          setRequestProperty(req, 'params', result.data);
         }
       }
 

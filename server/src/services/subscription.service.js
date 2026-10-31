@@ -10,6 +10,7 @@ import { TemplateLine } from '../models/TemplateLine.js';
 import { Product } from '../models/Product.js';
 import { ProductVariant } from '../models/ProductVariant.js';
 import { Tax } from '../models/Tax.js';
+import { Sequence } from '../models/Sequence.js';
 import { recordAuditLog } from './audit.service.js';
 import { ApiError } from '../utils/ApiError.js';
 import { paginate, paginationMeta } from '../utils/pagination.js';
@@ -115,8 +116,12 @@ export const createSubscription = async (data, actorId = null) => {
     });
   }
 
-  return sequelize.transaction(async (t) => {
-    const number = await getNextSequenceNumber('subscription', t);
+  const createdSub = await sequelize.transaction(async (t) => {
+    const number = await getNextSequenceNumber({
+      type: 'subscription',
+      transaction: t,
+      SequenceModel: Sequence,
+    });
 
     const subscription = await Subscription.create(
       {
@@ -151,8 +156,10 @@ export const createSubscription = async (data, actorId = null) => {
       transaction: t,
     });
 
-    return getSubscriptionById(subscription.id);
+    return subscription;
   });
+
+  return getSubscriptionById(createdSub.id);
 };
 
 export const createFromTemplate = async (templateId, customerId, startDate = null, actorId = null) => {
@@ -170,8 +177,12 @@ export const createFromTemplate = async (templateId, customerId, startDate = nul
   const validUntil = new Date(today);
   validUntil.setDate(validUntil.getDate() + validityDays);
 
-  return sequelize.transaction(async (t) => {
-    const number = await getNextSequenceNumber('subscription', t);
+  const createdSub = await sequelize.transaction(async (t) => {
+    const number = await getNextSequenceNumber({
+      type: 'subscription',
+      transaction: t,
+      SequenceModel: Sequence,
+    });
 
     const subscription = await Subscription.create(
       {
@@ -225,8 +236,10 @@ export const createFromTemplate = async (templateId, customerId, startDate = nul
       transaction: t,
     });
 
-    return getSubscriptionById(subscription.id);
+    return subscription;
   });
+
+  return getSubscriptionById(createdSub.id);
 };
 
 export const transitionSubscription = async (id, targetStatus, closeReason = null, actorId = null) => {
@@ -277,7 +290,7 @@ export const transitionSubscription = async (id, targetStatus, closeReason = nul
     updates.closeReason = closeReason || 'Closed by staff';
   }
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const before = sub.toJSON();
     await sub.update(updates, { transaction: t });
 
@@ -290,9 +303,9 @@ export const transitionSubscription = async (id, targetStatus, closeReason = nul
       after: sub.toJSON(),
       transaction: t,
     });
-
-    return getSubscriptionById(sub.id);
   });
+
+  return getSubscriptionById(sub.id);
 };
 
 export const pauseSubscription = async (id, actorId = null) => {
@@ -304,7 +317,7 @@ export const pauseSubscription = async (id, actorId = null) => {
     throw new ApiError(403, 'The plan for this subscription does not permit pausing');
   }
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const before = sub.toJSON();
     await sub.update({ isPaused: true }, { transaction: t });
     await recordAuditLog({
@@ -316,8 +329,9 @@ export const pauseSubscription = async (id, actorId = null) => {
       after: sub.toJSON(),
       transaction: t,
     });
-    return getSubscriptionById(sub.id);
   });
+
+  return getSubscriptionById(sub.id);
 };
 
 export const resumeSubscription = async (id, actorId = null) => {
@@ -329,7 +343,7 @@ export const resumeSubscription = async (id, actorId = null) => {
   const todayStr = new Date().toISOString().split('T')[0];
   const nextBilling = sub.nextBillingDate && sub.nextBillingDate > todayStr ? sub.nextBillingDate : todayStr;
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const before = sub.toJSON();
     await sub.update({ isPaused: false, nextBillingDate: nextBilling }, { transaction: t });
     await recordAuditLog({
@@ -341,8 +355,9 @@ export const resumeSubscription = async (id, actorId = null) => {
       after: sub.toJSON(),
       transaction: t,
     });
-    return getSubscriptionById(sub.id);
   });
+
+  return getSubscriptionById(sub.id);
 };
 
 export const renewSubscription = async (id, actorId = null) => {
@@ -354,7 +369,7 @@ export const renewSubscription = async (id, actorId = null) => {
   const baseDate = sub.expiryDate || new Date().toISOString().split('T')[0];
   const newExpiry = advancePeriod(baseDate, sub.plan.billingPeriod);
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const before = sub.toJSON();
     await sub.update({ expiryDate: newExpiry }, { transaction: t });
     await recordAuditLog({
@@ -366,8 +381,9 @@ export const renewSubscription = async (id, actorId = null) => {
       after: sub.toJSON(),
       transaction: t,
     });
-    return getSubscriptionById(sub.id);
   });
+
+  return getSubscriptionById(sub.id);
 };
 
 export const closeSubscription = async (id, reason = 'Cancelled by user', actorId = null) => {

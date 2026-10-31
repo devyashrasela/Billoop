@@ -72,7 +72,7 @@ export const createCustomer = async (data) => {
     });
   }
 
-  return sequelize.transaction(async (t) => {
+  const createdCustomer = await sequelize.transaction(async (t) => {
     // Generate secure random temp password for customer account
     const tempPassword = `Brightloop@${crypto.randomBytes(4).toString('hex')}1`;
     const passwordHash = await bcrypt.hash(tempPassword, 12);
@@ -96,14 +96,16 @@ export const createCustomer = async (data) => {
       { transaction: t }
     );
 
-    return getCustomerById(customer.id);
+    return customer;
   });
+
+  return getCustomerById(createdCustomer.id);
 };
 
 export const updateCustomer = async (id, data) => {
   const customer = await getCustomerById(id);
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     await customer.update(data, { transaction: t });
 
     if (data.name && customer.user) {
@@ -112,8 +114,8 @@ export const updateCustomer = async (id, data) => {
         { where: { id: customer.userId }, transaction: t }
       );
     }
-
-    return getCustomerById(id);
   });
+
+  return getCustomerById(id);
 };
 

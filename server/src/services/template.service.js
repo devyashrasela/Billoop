@@ -84,7 +84,7 @@ export const createTemplate = async (data) => {
     if (!term) throw new ApiError(404, 'Associated payment term not found');
   }
 
-  return sequelize.transaction(async (t) => {
+  const createdTemplate = await sequelize.transaction(async (t) => {
     const template = await QuotationTemplate.create(templateData, { transaction: t });
 
     const lineRecords = lines.map((l) => ({
@@ -98,8 +98,10 @@ export const createTemplate = async (data) => {
 
     await TemplateLine.bulkCreate(lineRecords, { transaction: t });
 
-    return getTemplateById(template.id);
+    return template;
   });
+
+  return getTemplateById(createdTemplate.id);
 };
 
 export const updateTemplate = async (id, data) => {
@@ -116,7 +118,7 @@ export const updateTemplate = async (id, data) => {
     if (!term) throw new ApiError(404, 'Associated payment term not found');
   }
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     await template.update(templateData, { transaction: t });
 
     if (lines !== undefined) {
@@ -131,9 +133,9 @@ export const updateTemplate = async (id, data) => {
       }));
       await TemplateLine.bulkCreate(lineRecords, { transaction: t });
     }
-
-    return getTemplateById(id);
   });
+
+  return getTemplateById(id);
 };
 
 export const deleteTemplate = async (id) => {
