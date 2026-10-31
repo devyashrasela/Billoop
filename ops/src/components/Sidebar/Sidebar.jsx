@@ -1,111 +1,197 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useMemo } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectIsAdmin } from '../../features/auth/authSlice';
-import '../../AppLayout.css';
+import {
+  selectExpandedGroups,
+  selectSidebarOpen,
+  toggleGroup,
+  setExpandedOnlyGroup,
+  closeSidebar,
+} from '../../features/ui/uiSlice';
+import {
+  SIDEBAR_MENU_CONFIG,
+  ChevronDownIcon,
+} from './sidebar.config';
+import './Sidebar.css';
 
 export const Sidebar = () => {
+  const dispatch = useDispatch();
+  const location = useLocation();
   const isAdmin = useSelector(selectIsAdmin);
+  const expandedGroups = useSelector(selectExpandedGroups);
+  const sidebarOpen = useSelector(selectSidebarOpen);
+
+  const visibleItems = useMemo(
+    () => SIDEBAR_MENU_CONFIG.filter((item) => !item.adminOnly || isAdmin),
+    [isAdmin]
+  );
+
+  // Find the parent group matching the current pathname
+  const activeParentKey = useMemo(() => {
+    const found = visibleItems.find(
+      (item) =>
+        item.children &&
+        item.children.some(
+          (child) =>
+            location.pathname === child.to ||
+            location.pathname.startsWith(`${child.to}/`)
+        )
+    );
+    return found ? found.key : null;
+  }, [visibleItems, location.pathname]);
+
+  // Open the active parent group on navigation / initial load (default others closed)
+  useEffect(() => {
+    if (activeParentKey) {
+      dispatch(setExpandedOnlyGroup(activeParentKey));
+    }
+  }, [activeParentKey, dispatch]);
+
+  const handleLinkClick = () => {
+    if (sidebarOpen) {
+      dispatch(closeSidebar());
+    }
+  };
+
+  const handleToggleParent = (key) => {
+    dispatch(toggleGroup(key));
+  };
 
   return (
-    <aside className="side" aria-label="Main navigation">
-      <div className="logo">
-        <i aria-hidden="true">
-          <b></b><b></b><b></b><b></b>
-        </i>
-        Brightloop
-      </div>
-
-      <div className="side__group">Overview</div>
-      <NavLink
-        to="/dashboard"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Dashboard
-      </NavLink>
-      <NavLink
-        to="/reports"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Reports & Analytics
-      </NavLink>
-
-      {isAdmin && (
-        <>
-          <div className="side__group">Administration</div>
-          <NavLink
-            to="/staff"
-            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-          >
-            Staff Management
-          </NavLink>
-        </>
+    <>
+      {sidebarOpen && (
+        <div
+          className="sidebar__overlay"
+          onClick={() => dispatch(closeSidebar())}
+          aria-hidden="true"
+        />
       )}
+      <aside
+        className={`sidebar ${sidebarOpen ? 'sidebar--open' : ''}`}
+        aria-label="Main navigation"
+      >
+        <div className="sidebar__brand">
+          <i className="sidebar__brand-icon" aria-hidden="true">
+            <b></b>
+            <b></b>
+            <b></b>
+            <b></b>
+          </i>
+          <span className="sidebar__brand-text">Brightloop</span>
+        </div>
 
-      <div className="side__group">Customers & Sales</div>
-      <NavLink
-        to="/customers"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Customers
-      </NavLink>
-      <NavLink
-        to="/subscriptions"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Subscriptions
-      </NavLink>
-      <NavLink
-        to="/invoices"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Invoices
-      </NavLink>
-      <NavLink
-        to="/payments"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Payments
-      </NavLink>
+        <nav className="sidebar__nav">
+          <ul className="sidebar__list" role="list">
+            {visibleItems.map((item) => {
+              const Icon = item.icon;
+              const hasChildren = Boolean(item.children && item.children.length > 0);
 
-      <div className="side__group">Catalog & Pricing</div>
-      <NavLink
-        to="/products"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Products & Variants
-      </NavLink>
-      <NavLink
-        to="/plans"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Subscription Plans
-      </NavLink>
-      <NavLink
-        to="/templates"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Quotation Templates
-      </NavLink>
-      <NavLink
-        to="/discounts"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Discounts & Coupons
-      </NavLink>
-      <NavLink
-        to="/taxes"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Taxes
-      </NavLink>
-      <NavLink
-        to="/payment-terms"
-        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
-      >
-        Payment Terms
-      </NavLink>
-    </aside>
+              if (!hasChildren) {
+                return (
+                  <li key={item.key} className="sidebar__group-item">
+                    <NavLink
+                      to={item.to}
+                      onClick={handleLinkClick}
+                      className={({ isActive }) =>
+                        `sidebar__item ${isActive ? 'sidebar__item--active' : ''}`
+                      }
+                      aria-current={location.pathname === item.to ? 'page' : undefined}
+                    >
+                      {Icon && <Icon />}
+                      <span>{item.label}</span>
+                      {item.badge !== undefined && item.badge !== null && (
+                        <span className="sidebar__badge">{item.badge}</span>
+                      )}
+                    </NavLink>
+                  </li>
+                );
+              }
+
+              const isExpanded = Boolean(expandedGroups[item.key]);
+              const isParentActive = activeParentKey === item.key;
+              const controlsId = `group-content-${item.key}`;
+
+              return (
+                <li key={item.key} className="sidebar__group-item">
+                  <button
+                    type="button"
+                    className={`sidebar__parent ${
+                      isParentActive ? 'sidebar__parent--active' : ''
+                    }`}
+                    onClick={() => handleToggleParent(item.key)}
+                    aria-expanded={isExpanded}
+                    aria-controls={controlsId}
+                  >
+                    <span className="sidebar__parent-lead">
+                      {Icon && <Icon />}
+                      <span className="sidebar__parent-label">{item.label}</span>
+                    </span>
+                    <span className="sidebar__parent-trail">
+                      {item.badge !== undefined && item.badge !== null && (
+                        <span className="sidebar__badge">{item.badge}</span>
+                      )}
+                      <span
+                        className={`sidebar__chevron ${
+                          isExpanded ? 'sidebar__chevron--expanded' : ''
+                        }`}
+                        aria-hidden="true"
+                      >
+                        <ChevronDownIcon />
+                      </span>
+                    </span>
+                  </button>
+
+                  <div
+                    id={controlsId}
+                    className={`sidebar__children-wrapper ${
+                      isExpanded ? 'sidebar__children-wrapper--expanded' : ''
+                    }`}
+                  >
+                    <div className="sidebar__children-inner">
+                      <ul className="sidebar__children" role="list">
+                        {item.children.map((child, index) => {
+                          const isLast = index === item.children.length - 1;
+                          const isChildActive =
+                            location.pathname === child.to ||
+                            location.pathname.startsWith(`${child.to}/`);
+
+                          return (
+                            <li
+                              key={child.to}
+                              className={`sidebar__child-item ${
+                                isLast ? 'sidebar__child-item--last' : ''
+                              }`}
+                            >
+                              <NavLink
+                                to={child.to}
+                                onClick={handleLinkClick}
+                                className={({ isActive }) =>
+                                  `sidebar__child ${
+                                    isActive || isChildActive
+                                      ? 'sidebar__child--active'
+                                      : ''
+                                  }`
+                                }
+                                aria-current={
+                                  location.pathname === child.to ? 'page' : undefined
+                                }
+                              >
+                                {child.label}
+                              </NavLink>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 };
 

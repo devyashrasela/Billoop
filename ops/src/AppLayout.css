@@ -80,26 +80,9 @@
   background: var(--sheet);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .app {
     grid-template-columns: 1fr;
-  }
-
-  .side {
-    flex-direction: row;
-    overflow-x: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    padding: 10px;
-  }
-
-  .logo,
-  .side__group {
-    display: none;
-  }
-
-  .side__link {
-    white-space: nowrap;
   }
 }
 
