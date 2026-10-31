@@ -44,7 +44,7 @@ brightloop/
 ├── shared/
 │   ├── styles/base.css          reset + base elements (imported by both apps)
 │   ├── validators/password.js   password rule (used by both apps)
-│   └── constants/               roles, statuses, billing periods
+│   └── constants/               roles, statuses, billing periods, types
 ├── server/
 │   ├── package.json             "type": "module"
 │   ├── .env.example
@@ -52,12 +52,13 @@ brightloop/
 │       ├── app.js               express app (no listen)
 │       ├── server.js            listen + start jobs
 │       ├── config/              env.js, db.js, mail.js
+│       ├── migrations/          Umzug database migrations
 │       ├── models/              one file per model + index.js (associations)
 │       ├── controllers/         thin: parse → service → respond
 │       ├── services/            all business logic
 │       ├── routes/              index.js, auth, portal/*, ops/*
 │       ├── middleware/          authenticate, authorize, validate, errorHandler, rateLimit
-│       ├── validators/          Zod (or Joi) request schemas
+│       ├── validators/          Zod request schemas
 │       ├── jobs/                billing.job.js, overdue.job.js (node-cron)
 │       ├── seeders/             admin user, taxes, payment terms, sample data
 │       └── utils/               ApiError, asyncHandler, pagination, numbering, money
@@ -130,10 +131,10 @@ All tables: `id` (BIGINT UNSIGNED auto-increment PK), `createdAt`, `updatedAt`. 
 | **Product** | name, type (ENUM: service, software, addon, other), salesPrice, costPrice, notes, isActive |
 | **ProductVariant** | productId, attribute (e.g. "Brand"), value (e.g. "Odoo"), extraPrice (e.g. 560.00). Unique (productId, attribute, value) |
 | **Plan** | name, price, billingPeriod ENUM(daily,weekly,monthly,yearly), minQty, availableFrom, availableTo, autoClose BOOL, allowEarlyClose BOOL, allowPause BOOL, allowRenew BOOL, isActive |
-| **Tax** | name, rate (percent), type ENUM(percentage, fixed), isActive |
+| **Tax** | name, rate (percentage rate or fixed fee amount), type ENUM(percentage, fixed), isActive |
 | **PaymentTerm** | name (e.g. "Net 15"), dueDays |
-| **QuotationTemplate** | name, planId, validityDays, isActive |
-| **TemplateLine** | templateId, productId, variantId (nullable), qty, taxId (nullable) |
+| **QuotationTemplate** | name, planId, validityDays, paymentTermId (nullable default payment term), isActive |
+| **TemplateLine** | templateId, productId, variantId (nullable), qty, unitPrice (nullable, overrides product salesPrice + variant extraPrice if set), taxId (nullable) |
 
 ### Transactions
 | Model | Fields |
@@ -141,10 +142,10 @@ All tables: `id` (BIGINT UNSIGNED auto-increment PK), `createdAt`, `updatedAt`. 
 | **Subscription** | number (unique, e.g. `SUB-2026-000123`), customerId, planId, templateId (nullable), paymentTermId, status ENUM(draft, quotation, confirmed, active, closed), isPaused BOOL, startDate, expiryDate, nextBillingDate, quotationValidUntil, closedAt, closeReason, createdBy |
 | **SubscriptionLine** | subscriptionId, productId, variantId (nullable), description, qty, unitPrice, taxId (nullable), amount (qty × unitPrice, pre-tax) |
 | **Discount** | name, code (nullable, unique), type ENUM(fixed, percent), value, minPurchase, minQty, startDate, endDate, usageLimit (nullable = unlimited), usedCount (default 0), scope ENUM(product, subscription), isActive |
-| **DiscountProduct** | discountId, productId (join table for product-scoped discounts) |
-| **SubscriptionDiscount** | subscriptionId, discountId (explicit attachment of a subscription-scoped discount) |
-| **Invoice** | number (unique, `INV-2026-000456`), subscriptionId, customerId, periodStart, periodEnd, issueDate, dueDate, status ENUM(draft, confirmed, paid, cancelled), subtotal, discountTotal, taxTotal, total, amountPaid (default 0), sentAt, cancelledAt |
-| **InvoiceLine** | invoiceId, productId, variantId, description, qty, unitPrice, discountAmount, taxId, taxRate (snapshot), taxAmount, lineTotal |
+| **DiscountProduct** | id (PK), discountId, productId (unique discountId + productId; join table for product-scoped discounts) |
+| **SubscriptionDiscount** | id (PK), subscriptionId, discountId (unique subscriptionId + discountId; explicit attachment of a subscription-scoped discount) |
+| **Invoice** | number (unique, `INV-2026-000456`), subscriptionId, customerId (denormalized snapshot of subscription.customerId), periodStart, periodEnd, issueDate, dueDate, status ENUM(draft, confirmed, paid, cancelled), subtotal, discountTotal, taxTotal, total, amountPaid (default 0), sentAt, cancelledAt |
+| **InvoiceLine** | invoiceId, productId, variantId (nullable), description, qty, unitPrice, discountAmount, taxId, taxRate (snapshot), taxAmount, lineTotal |
 | **Payment** | invoiceId, method ENUM(cash, bank_transfer, card, upi, cheque, other), amount, paidOn, note, recordedBy |
 | **AuditLog** | actorId, entity, entityId, action, before (JSON), after (JSON), at |
 | **Sequence** | key (e.g. `invoice-2026`), lastValue. Used for gap-free numbering inside transactions |
@@ -157,7 +158,8 @@ All tables: `id` (BIGINT UNSIGNED auto-increment PK), `createdAt`, `updatedAt`. 
 - `Invoice(status, dueDate)`, `Invoice(customerId, status)`, `Invoice(subscriptionId)`, `Invoice(number)` unique
 - **`Invoice(subscriptionId, periodStart)` UNIQUE**: the hard guarantee against double billing
 - `Payment(invoiceId)`, `Payment(paidOn)`
-- `Discount(isActive, startDate, endDate)`, `DiscountProduct(discountId, productId)` unique
+- `AuditLog(entity, entityId)`, `AuditLog(actorId)`, `AuditLog(at)`
+- `Discount(isActive, startDate, endDate)`, `DiscountProduct(discountId, productId)` unique, `SubscriptionDiscount(subscriptionId, discountId)` unique
 - Foreign keys on every `*Id` column
 
 ---
@@ -171,14 +173,14 @@ All transitions live in service functions that reject illegal moves with `ApiErr
 Draft → Quotation → Confirmed → Active → Closed
 ```
 - `Draft → Quotation`: lines present, customer + plan set. Sets `quotationValidUntil = today + template.validityDays`.
-- `Quotation → Confirmed`: customer/staff accepts; must be before `quotationValidUntil`.
-- `Confirmed → Active`: on or after `startDate`; sets `nextBillingDate = startDate`.
+- `Quotation → Confirmed`: customer/staff accepts; must be before `quotationValidUntil`. If `quotationValidUntil < today`, quotation is expired; staff must re-quote or update quotation validity before confirming.
+- `Confirmed → Active`: activated automatically on or after `startDate` (handled at the start of the daily billing job sweep or upon confirmation if startDate <= today); sets `nextBillingDate = startDate`.
 - `Active → Closed`:
-  - **auto**: if `plan.autoClose` and `expiryDate` reached (daily job);
-  - **early**: only if `plan.allowEarlyClose`;
+  - **auto**: if `plan.autoClose` and `expiryDate` reached (daily overdue/close job);
+  - **early**: only if `plan.allowEarlyClose` (or manual override by admin);
   - **manual by admin** always allowed.
-- **Pause** (`isPaused`): only if `plan.allowPause`; paused subscriptions are skipped by billing, and `nextBillingDate` resumes on unpause.
-- **Renew**: only if `plan.allowRenew`; extends `expiryDate` by one plan term (or creates a successor subscription; implement as extend-in-place for v1).
+- **Pause** (`isPaused`): only if `plan.allowPause`; paused subscriptions are skipped by billing. On unpause/resume: `nextBillingDate = MAX(nextBillingDate, today)` (customer is not billed for paused downtime).
+- **Renew**: only if `plan.allowRenew`; extends `expiryDate` by one plan term (or creates a successor subscription; implement as extend-in-place for v1). Renewal is permitted while `active` prior to auto-closing.
 - Plan availability: a subscription cannot be created from a plan outside `availableFrom/To`, and `quantity >= plan.minQty` is enforced.
 
 ### Invoice
@@ -197,14 +199,17 @@ Draft → Confirmed → Paid          (Cancelled = side exit from Draft/Confirme
 
 ### 6.1 Tax service
 - Admin defines taxes. Each subscription line references a tax.
-- Per line: `taxAmount = round((lineAmount - lineDiscount) × rate / 100, 2)`. Tax is added on top of price.
+- Per line:
+  - If `type = percentage`: `taxAmount = round((lineAmount - lineDiscount) × rate / 100, 2)`.
+  - If `type = fixed`: `taxAmount = round(rate × qty, 2)` (flat fee per unit quantity).
+  - Tax is added on top of price.
 - Rounding is done per line, then summed. Centralize in `utils/money.js` (work in integer minor units internally, or use `decimal.js`).
 
 ### 6.2 Discount service
 - Admin only creates discounts. A discount is **eligible** for an invoice when all hold:
   `isActive` ∧ `startDate ≤ today ≤ endDate` ∧ `usedCount < usageLimit` (or unlimited) ∧ `subtotal ≥ minPurchase` ∧ `qty ≥ minQty` (qty of matching lines).
 - **Scope = product**: applies to lines whose product is in `DiscountProduct`. **Scope = subscription**: applies to the whole subtotal for subscriptions it is attached to (`SubscriptionDiscount`).
-- `percent` → `base × value / 100`; `fixed` → `min(value, base)`. Discount never exceeds the base.
+- `percent` → `base × value / 100`; `fixed` → `min(value, base)`. Discount never exceeds the base. For product-scoped discounts, `qty` refers to the total quantity across matching subscription lines.
 - If several are eligible, apply in a deterministic order (largest saving first) and cap the total so a line never goes negative. (Stacking is allowed up to the cap; document in code.)
 - `usedCount` is incremented **inside the billing transaction** with a conditional update (`UPDATE ... SET usedCount = usedCount + 1 WHERE id = ? AND (usageLimit IS NULL OR usedCount < usageLimit)`); if 0 rows change, skip that discount. This enforces the limit under concurrency.
 - Discounts appear on the next invoice automatically and stop when expired or exhausted. No manual step.
@@ -224,7 +229,7 @@ Triggered by a daily cron (`jobs/billing.job.js`) and by an admin/staff "Run bil
 3. **Catch-up loop**: if `nextBillingDate` is multiple periods behind (downtime), repeat step 2 until it is in the future. Each period gets its own invoice.
 4. **Idempotency**: the unique index `(subscriptionId, periodStart)` is the final guard. A duplicate-key error is caught and treated as "already billed", not a failure.
 5. One failing subscription must not abort the batch; log the error, continue, and return a summary `{ processed, skipped, failed: [{id, reason}] }`.
-6. `jobs/overdue.job.js` (daily): no state change needed because overdue is derived; this job only sends reminder emails (optional v1.1) and auto-closes expired subscriptions.
+6. `jobs/overdue.job.js` (daily): invoices do not require state changes since overdue status is derived dynamically; this job handles auto-closing expired subscriptions (`Active → Closed` when `plan.autoClose AND expiryDate <= today`) and sending overdue reminder emails (optional v1.1).
 
 ### 6.4 Payment service
 - `POST /api/ops/invoices/:id/payments` with `{ method, amount, paidOn, note }`.
@@ -232,7 +237,7 @@ Triggered by a daily cron (`jobs/billing.job.js`) and by an admin/staff "Run bil
 - Partial payments are allowed.
 
 ### 6.5 Numbering
-Use the `Sequence` table with `SELECT ... FOR UPDATE` inside the creating transaction for gap-free, race-safe numbers: `SUB-YYYY-######`, `INV-YYYY-######`.
+Use the `Sequence` table with `SELECT ... FOR UPDATE` inside the creating transaction for gap-free, race-safe numbers: `SUB-YYYY-######`, `INV-YYYY-######`. On year boundary, insert row if not present: `INSERT IGNORE INTO Sequences (key, lastValue) VALUES ('invoice-YYYY', 0)`. Line unit price at subscription spawn is frozen on `SubscriptionLine.unitPrice = TemplateLine.unitPrice ?? (Product.salesPrice + Variant.extraPrice)`.
 
 ---
 
@@ -245,19 +250,25 @@ All list endpoints accept `page`, `limit` (max 100), `sort`, plus filters, and r
 
 ### Ops (admin/staff)
 ```
-GET/POST        /api/ops/products          (POST/PUT/DELETE admin)
+GET/POST        /api/ops/products          (POST/PUT/DELETE: admin)
+GET/PUT/DELETE  /api/ops/products/:id      (admin)
 GET/POST/DELETE /api/ops/products/:id/variants
-GET/POST/PUT    /api/ops/plans             (write: admin)
-GET/POST/PUT    /api/ops/taxes             (write: admin)
-GET/POST/PUT    /api/ops/payment-terms     (write: admin)
-GET/POST/PUT    /api/ops/discounts         (write: admin)
+GET/POST        /api/ops/plans             (POST/PUT/DELETE: admin)
+GET/PUT/DELETE  /api/ops/plans/:id         (admin)
+GET/POST        /api/ops/taxes             (POST/PUT/DELETE: admin)
+GET/PUT/DELETE  /api/ops/taxes/:id         (admin)
+GET/POST        /api/ops/payment-terms     (POST/PUT/DELETE: admin)
+GET/PUT/DELETE  /api/ops/payment-terms/:id (admin)
+GET/POST        /api/ops/discounts         (POST/PUT/DELETE: admin)
+GET/PUT/DELETE  /api/ops/discounts/:id     (admin)
 GET/POST/PUT    /api/ops/templates
+GET/PUT/DELETE  /api/ops/templates/:id
 GET/POST/PUT    /api/ops/customers
 GET/POST/PUT    /api/ops/subscriptions
 POST            /api/ops/subscriptions/from-template/:templateId
 POST            /api/ops/subscriptions/:id/transition   { to }
 POST            /api/ops/subscriptions/:id/pause | resume | renew | close
-GET             /api/ops/invoices          filters: status, customerId, overdue, from, to, q
+GET             /api/ops/invoices          filters: status, customerId, subscriptionId, overdue, from, to, q
 GET             /api/ops/invoices/:id
 POST            /api/ops/invoices/:id/confirm | cancel | send
 GET             /api/ops/invoices/:id/print
@@ -267,6 +278,7 @@ POST            /api/ops/billing/run
 GET             /api/ops/dashboard/summary
 GET             /api/ops/reports/revenue | subscriptions | payments | overdue
 GET/POST/PUT    /api/ops/staff             (admin only)
+DELETE          /api/ops/staff/:id         (admin only, deactivates staff isActive=false)
 ```
 
 ### Portal (customer, auto-scoped)
@@ -288,7 +300,7 @@ GET  /api/portal/plans               (available plans, for browsing)
   - Revenue collected (sum of payments in range)
   - Outstanding (sum of `total − amountPaid` on confirmed invoices)
   - Overdue invoices (count + amount + top list)
-  - MRR (normalize each active subscription's recurring amount to monthly)
+  - MRR (normalize each active subscription's recurring amount to monthly: daily × 30.44, weekly × 4.33, monthly × 1, yearly ÷ 12)
 - All lists: server-side pagination, filtering, sorting on indexed columns. `limit` capped at 100.
 - Use Sequelize `include` deliberately with `attributes` lists to avoid N+1 and over-fetching; use `raw: true` for read-only aggregates.
 - Add `Server-Timing`/request logging; log any request > 1 s.
@@ -387,11 +399,9 @@ src/
 ```
 NODE_ENV=development
 PORT=4000
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=brightloop
-DB_USER=root
-DB_PASSWORD=
+DB_URL=mysql://avnadmin:PASSWORD@HOST:PORT/brightloop?ssl-mode=REQUIRED
+DB_SSL_CA_PATH=./certs/ca.pem
+DB_POOL_MAX=8
 JWT_ACCESS_SECRET=change-me
 JWT_ACCESS_TTL=15m
 REFRESH_TTL_DAYS=7

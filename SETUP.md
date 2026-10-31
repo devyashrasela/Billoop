@@ -113,6 +113,10 @@ export const BILLING_PERIODS = ['daily', 'weekly', 'monthly', 'yearly'];
 export const SUBSCRIPTION_STATUS = ['draft', 'quotation', 'confirmed', 'active', 'closed'];
 export const INVOICE_STATUS = ['draft', 'confirmed', 'paid', 'cancelled'];
 export const PAYMENT_METHODS = ['cash', 'bank_transfer', 'card', 'upi', 'cheque', 'other'];
+export const PRODUCT_TYPES = ['service', 'software', 'addon', 'other'];
+export const TAX_TYPES = ['percentage', 'fixed'];
+export const DISCOUNT_TYPES = ['fixed', 'percent'];
+export const DISCOUNT_SCOPES = ['product', 'subscription'];
 ```
 
 `shared/styles/base.css`: a minimal reset only (box-sizing, margin reset, `img{max-width:100%}`, `button{font:inherit}`, `body{font-family:var(--font-body)}`). It must reference only variables, never hard-coded colors.
@@ -177,6 +181,8 @@ export const env = {
   resetTtlMinutes: Number(process.env.RESET_TTL_MINUTES) || 30,
   portalUrl: process.env.PORTAL_URL,
   opsUrl: process.env.OPS_URL,
+  billingCron: process.env.BILLING_CRON || '0 1 * * *',
+  billingAutoConfirm: process.env.BILLING_AUTO_CONFIRM !== 'false',
 };
 ```
 
@@ -423,7 +429,7 @@ export const store = configureStore({
 `src/app/hooks.js`
 ```js
 import { useDispatch, useSelector } from 'react-redux';
-export const useAppDispatch = useDispatch;
+export const useAppDispatch = () => useDispatch();
 export const useAppSelector = useSelector;
 ```
 
