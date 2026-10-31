@@ -54,19 +54,21 @@ export const createProduct = async (data) => {
     });
   }
 
-  return sequelize.transaction(async (t) => {
-    const product = await Product.create(productData, { transaction: t });
+  const product = await sequelize.transaction(async (t) => {
+    const p = await Product.create(productData, { transaction: t });
 
     if (variants.length > 0) {
       const variantRecords = variants.map((v) => ({
         ...v,
-        productId: product.id,
+        productId: p.id,
       }));
       await ProductVariant.bulkCreate(variantRecords, { transaction: t });
     }
 
-    return getProductById(product.id);
+    return p;
   });
+
+  return getProductById(product.id);
 };
 
 export const updateProduct = async (id, data) => {
@@ -84,7 +86,7 @@ export const updateProduct = async (id, data) => {
     }
   }
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     await product.update(productData, { transaction: t });
 
     if (variants !== undefined) {
@@ -98,9 +100,9 @@ export const updateProduct = async (id, data) => {
         await ProductVariant.bulkCreate(variantRecords, { transaction: t });
       }
     }
-
-    return getProductById(id);
   });
+
+  return getProductById(id);
 };
 
 export const deleteProduct = async (id) => {

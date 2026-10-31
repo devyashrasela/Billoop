@@ -80,7 +80,7 @@ export const createDiscount = async (data) => {
     });
   }
 
-  return sequelize.transaction(async (t) => {
+  const createdDiscount = await sequelize.transaction(async (t) => {
     const discount = await Discount.create(discountData, { transaction: t });
 
     if (discount.scope === 'product' && productIds.length > 0) {
@@ -91,8 +91,10 @@ export const createDiscount = async (data) => {
       await DiscountProduct.bulkCreate(records, { transaction: t });
     }
 
-    return getDiscountById(discount.id);
+    return discount;
   });
+
+  return getDiscountById(createdDiscount.id);
 };
 
 export const updateDiscount = async (id, data) => {
@@ -118,7 +120,7 @@ export const updateDiscount = async (id, data) => {
     });
   }
 
-  return sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     await discount.update(discountData, { transaction: t });
 
     if (productIds !== undefined) {
@@ -131,9 +133,9 @@ export const updateDiscount = async (id, data) => {
         await DiscountProduct.bulkCreate(records, { transaction: t });
       }
     }
-
-    return getDiscountById(id);
   });
+
+  return getDiscountById(id);
 };
 
 export const deleteDiscount = async (id) => {

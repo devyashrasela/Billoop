@@ -12,7 +12,7 @@ export const recordPayment = async (invoiceId, paymentData, actorId) => {
     throw new ApiError(401, 'Actor ID is required to record a payment');
   }
 
-  return await sequelize.transaction(async (t) => {
+  const createdPayment = await sequelize.transaction(async (t) => {
     // Row-level lock on the target invoice
     const invoice = await Invoice.findByPk(invoiceId, {
       lock: t.LOCK.UPDATE,
@@ -89,12 +89,14 @@ export const recordPayment = async (invoiceId, paymentData, actorId) => {
       transaction: t,
     });
 
-    const updatedInvoice = await getInvoiceById(invoice.id);
-    return {
-      payment,
-      invoice: updatedInvoice,
-    };
+    return payment;
   });
+
+  const updatedInvoice = await getInvoiceById(invoiceId);
+  return {
+    payment: createdPayment,
+    invoice: updatedInvoice,
+  };
 };
 
 export const listPayments = async (query = {}) => {

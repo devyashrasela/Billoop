@@ -132,13 +132,13 @@ export const confirmInvoice = async (id, actorId = null) => {
       after: invoice.toJSON(),
       transaction: t,
     });
-
-    return getInvoiceById(invoice.id);
   });
+
+  return getInvoiceById(id);
 };
 
 export const cancelInvoice = async (id, reason = null, actorId = null) => {
-  return await sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const invoice = await Invoice.findByPk(id, {
       lock: t.LOCK.UPDATE,
       transaction: t,
@@ -174,7 +174,7 @@ export const cancelInvoice = async (id, reason = null, actorId = null) => {
       after: { ...invoice.toJSON(), cancelReason: reason },
       transaction: t,
     });
-
-    return getInvoiceById(invoice.id);
   });
+
+  return getInvoiceById(id);
 };
