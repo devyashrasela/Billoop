@@ -8,5 +8,7 @@ const start = async () => {
   app.listen(env.port, () => console.log(`API on http://localhost:${env.port}`));
 };
 
-start().catch((e) => { console.error('Startup failed', e); process.exit(1); });
-
+start().catch((e) => {
+  console.error('Startup failed', e);
+  process.exit(1);
+});
