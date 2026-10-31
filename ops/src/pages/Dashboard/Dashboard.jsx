@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useGetDashboardSummaryQuery } from '../../services/endpoints/dashboardApi';
+import { useGetDashboardSummaryQuery, useTriggerBillingSweepMutation } from '../../services/endpoints/dashboardApi';
 import { useGetRevenueReportQuery } from '../../services/endpoints/reportApi';
 import DashCard from '../../components/DashCard/DashCard';
 import BarChart from '../../components/Chart/BarChart';
@@ -8,7 +8,7 @@ import './Dashboard.css';
 export const Dashboard = () => {
   const { data: summaryData, isLoading: isSummaryLoading, refetch } = useGetDashboardSummaryQuery();
   const { data: revenueData, isLoading: isRevenueLoading } = useGetRevenueReportQuery({ months: 6 });
-  const [isRunningBilling, setIsRunningBilling] = useState(false);
+  const [triggerBillingSweep, { isLoading: isRunningBilling }] = useTriggerBillingSweepMutation();
   const [billingNotice, setBillingNotice] = useState('');
 
   const kpis = summaryData?.kpis || {
@@ -22,23 +22,15 @@ export const Dashboard = () => {
   };
 
   const handleRunBilling = async () => {
-    setIsRunningBilling(true);
     setBillingNotice('');
     try {
-      const response = await fetch('/api/ops/billing/run-now', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
-        },
-      });
-      const resData = await response.json();
-      setBillingNotice(`Billing complete: ${resData.result?.invoicesGenerated || 0} invoices generated.`);
+      const resData = await triggerBillingSweep().unwrap();
+      const generated = resData.result?.invoicesGenerated ?? 0;
+      const processed = resData.result?.subscriptionsProcessed ?? 0;
+      setBillingNotice(`Billing complete: ${generated} invoices generated (${processed} subscriptions evaluated).`);
       refetch();
-    } catch {
-      setBillingNotice('Failed to trigger billing sweep.');
-    } finally {
-      setIsRunningBilling(false);
+    } catch (err) {
+      setBillingNotice(err?.data?.message || err?.data?.error || 'Failed to trigger billing sweep.');
     }
   };
 
