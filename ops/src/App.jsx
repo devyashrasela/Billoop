@@ -13,6 +13,7 @@ import ResetPassword from './pages/ResetPassword/ResetPassword';
 // ── Person B pages ──
 import Taxes from './pages/Taxes/Taxes';
 import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
+import Products from './pages/Products/Products';
 import './AppLayout.css';
 
 function OpsLayout() {
@@ -35,6 +36,12 @@ function OpsLayout() {
           </NavLink>
 
           <div className="side__group">Catalog & Settings</div>
+          <NavLink
+            to="/products"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Products & Variants
+          </NavLink>
           <NavLink
             to="/taxes"
             className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
@@ -92,6 +99,7 @@ export default function App() {
           />
 
           {/* ── Person B Catalog & Transaction Pages ── */}
+          <Route path="/products" element={<Products />} />
           <Route path="/taxes" element={<Taxes />} />
           <Route path="/payment-terms" element={<PaymentTerms />} />
         </Route>
