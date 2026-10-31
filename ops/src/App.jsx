@@ -28,6 +28,7 @@ import SubscriptionCreate from './pages/Subscriptions/SubscriptionCreate';
 import Invoices from './pages/Invoices/Invoices';
 import InvoiceDetail from './pages/Invoices/InvoiceDetail';
 import Payments from './pages/Payments/Payments';
+import { ToastContainer } from './components';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -43,48 +44,51 @@ export default function App() {
   }, [refresh, dispatch]);
 
   return (
-    <Routes>
-      {/* ── Public Auth Routes (Person A) ── */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+    <>
+      <Routes>
+        {/* ── Public Auth Routes (Person A) ── */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* ── Protected Ops Routes (Staff & Admin) ── */}
-      <Route element={<ProtectedRoute allowedRoles={['admin', 'staff']} />}>
-        <Route element={<OpsLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/reports" element={<Reports />} />
+        {/* ── Protected Ops Routes (Staff & Admin) ── */}
+        <Route element={<ProtectedRoute allowedRoles={['admin', 'staff']} />}>
+          <Route element={<OpsLayout />}>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/reports" element={<Reports />} />
 
-          {/* Admin-only Staff Management */}
-          <Route
-            path="/staff"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <Staff />
-              </ProtectedRoute>
-            }
-          />
+            {/* Admin-only Staff Management */}
+            <Route
+              path="/staff"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <Staff />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* ── Person B Catalog & Transaction Pages ── */}
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/subscriptions/new" element={<SubscriptionCreate />} />
-          <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
-          <Route path="/invoices" element={<Invoices />} />
-          <Route path="/invoices/:id" element={<InvoiceDetail />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/plans" element={<Plans />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/discounts" element={<Discounts />} />
-          <Route path="/taxes" element={<Taxes />} />
-          <Route path="/payment-terms" element={<PaymentTerms />} />
+            {/* ── Person B Catalog & Transaction Pages ── */}
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
+            <Route path="/subscriptions/new" element={<SubscriptionCreate />} />
+            <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/invoices/:id" element={<InvoiceDetail />} />
+            <Route path="/payments" element={<Payments />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/plans" element={<Plans />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/discounts" element={<Discounts />} />
+            <Route path="/taxes" element={<Taxes />} />
+            <Route path="/payment-terms" element={<PaymentTerms />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* ── Fallback ── */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+        {/* ── Fallback ── */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+      <ToastContainer />
+    </>
   );
 }
