@@ -1,0 +1,13 @@
+{
+  "name": "brightloop",
+  "private": true,
+  "workspaces": ["server", "portal", "ops", "shared"],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:portal": "npm run dev -w portal",
+    "dev:ops": "npm run dev -w ops",
+    "seed": "npm run seed -w server",
+    "test": "npm run test -w server"
+  }
+}
+

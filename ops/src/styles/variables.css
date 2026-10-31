@@ -1,0 +1,47 @@
+:root {
+  /* Brand */
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-primary-soft: #eef2ff;
+  --color-accent: #0ea5e9;
+
+  /* Semantic */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-danger:  #dc2626;
+  --color-info:    #0284c7;
+
+  /* Neutrals */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  /* Typography */
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --fs-xs: 0.75rem;  --fs-sm: 0.875rem; --fs-md: 1rem;
+  --fs-lg: 1.25rem;  --fs-xl: 1.5rem;   --fs-2xl: 2rem;
+  --fw-regular: 400; --fw-medium: 500;  --fw-bold: 700;
+  --lh-base: 1.5;
+
+  /* Spacing scale */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.5rem;  --space-6: 2rem;   --space-7: 3rem;
+
+  /* Shape + depth */
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.08);
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 56px;
+  --container-max: 1200px;
+
+  /* Motion + layering */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --z-dropdown: 100; --z-modal: 200; --z-toast: 300;
+}

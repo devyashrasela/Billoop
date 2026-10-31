@@ -1,0 +1,7 @@
+{
+  "name": "@brightloop/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Shared constants, validators and styles for Brightloop"
+}
+
