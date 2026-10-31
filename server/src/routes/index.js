@@ -6,7 +6,12 @@ import staffRoutes from './ops/staff.js';
 import billingRoutes from './ops/billing.js';
 
 // ── Person B routes ──
-// (Person B mounts catalog, customer, and transaction routes here)
+import taxRoutes from './ops/taxes.js';
+import paymentTermRoutes from './ops/paymentTerms.js';
+import productRoutes from './ops/products.js';
+import planRoutes from './ops/plans.js';
+import discountRoutes from './ops/discounts.js';
+import templateRoutes from './ops/templates.js';
 
 const router = Router();
 
@@ -19,5 +24,11 @@ router.use('/ops/staff', staffRoutes);
 router.use('/ops/billing', billingRoutes);
 
 // ── Person B mounts ──
+router.use('/ops/taxes', taxRoutes);
+router.use('/ops/payment-terms', paymentTermRoutes);
+router.use('/ops/products', productRoutes);
+router.use('/ops/plans', planRoutes);
+router.use('/ops/discounts', discountRoutes);
+router.use('/ops/templates', templateRoutes);
 
 export default router;

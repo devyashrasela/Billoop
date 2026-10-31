@@ -1,0 +1,71 @@
+.taxes-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.taxes-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.taxes-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.taxes-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.tax-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.tax-type {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.tax-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.tax-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.tax-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.tax-form__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .tax-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+

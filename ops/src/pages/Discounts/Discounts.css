@@ -1,0 +1,129 @@
+.discounts-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.discounts-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.discounts-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.discounts-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.discounts-page__filters {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.scope-filter {
+  width: 150px;
+}
+
+.discount-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.discount-code {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  padding: 1px 6px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  border-radius: var(--r-btn);
+  margin-left: var(--space-2);
+}
+
+.discount-value {
+  font-weight: var(--fw-medium);
+  color: var(--green);
+}
+
+.scope-pill {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  background: var(--grey-soft);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+}
+
+.discount-dates {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.discount-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.discount-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.discount-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.product-selection-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.selection-title {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.product-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.product-check-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .discount-form__row {
+    grid-template-columns: 1fr;
+  }
+}

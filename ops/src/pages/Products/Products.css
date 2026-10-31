@@ -1,0 +1,143 @@
+.products-page {
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.products-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.products-page__head h1 {
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.products-page__head p {
+  color: var(--muted);
+  font-size: var(--fs-base);
+  margin-top: var(--space-1);
+}
+
+.products-page__filters {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.type-filter {
+  width: 140px;
+}
+
+.product-name {
+  color: var(--ink);
+  font-weight: var(--fw-medium);
+}
+
+.product-type {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.04em;
+}
+
+.product-variants-tags {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  margin-top: var(--space-1);
+}
+
+.variant-tag {
+  background: var(--grey-soft);
+  color: var(--ink);
+  font-size: var(--fs-xs);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+}
+
+.product-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.product-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.product-form__variants-section {
+  border: 1px dashed var(--line);
+  border-radius: var(--r-card);
+  padding: var(--space-4);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.variants-heading {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink);
+}
+
+.variants-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.variant-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-btn);
+}
+
+.variant-label {
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+.variant-inputs {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1.5fr auto;
+  gap: var(--space-2);
+}
+
+.product-form__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .product-form__row {
+    grid-template-columns: 1fr;
+  }
+  .variant-inputs {
+    grid-template-columns: 1fr;
+  }
+}

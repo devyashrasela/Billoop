@@ -2,20 +2,31 @@ import { ApiError } from '../utils/ApiError.js';
 
 /**
  * Zod validation middleware factory.
- * Accepts a Zod schema or an object with schemas for body, query, and/or params.
+ * Accepts either:
+ * 1. An object of schemas: { body?: ZodType, query?: ZodType, params?: ZodType }
+ * 2. A single composite Zod schema: z.object({ body?: ..., query?: ..., params?: ... })
  *
- * Example usage:
- *   validate({ body: registerSchema })
- *   validate({ query: paginationSchema, params: idSchema })
- *
- * @param {Object} schemas
- * @param {import('zod').ZodType} [schemas.body]
- * @param {import('zod').ZodType} [schemas.query]
- * @param {import('zod').ZodType} [schemas.params]
+ * @param {Object|import('zod').ZodType} schemas
  */
 export const validate = (schemas) => {
   return async (req, res, next) => {
     try {
+      // Case 1: schemas is an instance of a Zod schema
+      if (schemas && typeof schemas.parseAsync === 'function') {
+        const parsed = await schemas.parseAsync({
+          body: req.body,
+          query: req.query,
+          params: req.params,
+        });
+
+        if (parsed.body !== undefined) req.body = parsed.body;
+        if (parsed.query !== undefined) req.query = parsed.query;
+        if (parsed.params !== undefined) req.params = parsed.params;
+
+        return next();
+      }
+
+      // Case 2: schemas is an object { body?, query?, params? }
       const fieldErrors = {};
 
       if (schemas.body && req.body !== undefined) {
@@ -60,6 +71,14 @@ export const validate = (schemas) => {
 
       next();
     } catch (err) {
+      if (err.name === 'ZodError' && err.issues) {
+        const fieldErrors = {};
+        for (const issue of err.issues) {
+          const key = issue.path.slice(1).join('.') || issue.path.join('.');
+          fieldErrors[key] = issue.message;
+        }
+        return next(new ApiError(422, 'Validation failed', fieldErrors));
+      }
       next(err);
     }
   };
