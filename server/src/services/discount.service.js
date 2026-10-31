@@ -3,8 +3,10 @@ import { sequelize } from '../config/db.js';
 import { Discount } from '../models/Discount.js';
 import { Product } from '../models/Product.js';
 import { DiscountProduct } from '../models/DiscountProduct.js';
+import { SubscriptionDiscount } from '../models/SubscriptionDiscount.js';
 import { ApiError } from '../utils/ApiError.js';
 import { paginate, paginationMeta } from '../utils/pagination.js';
+import { calculateDiscount, addMoney, subtractMoney } from '../utils/money.js';
 
 export const listDiscounts = async (query = {}) => {
   const { page, limit, offset } = paginate(query);
@@ -138,8 +140,7 @@ export const deleteDiscount = async (id) => {
   const discount = await getDiscountById(id);
   await discount.destroy(); // Soft delete
   return { id, message: 'Discount deleted successfully' };
-import { calculateDiscount, addMoney, subtractMoney } from '../utils/money.js';
-import { Discount, DiscountProduct, SubscriptionDiscount } from '../models/index.js';
+};
 
 /**
  * Checks if a discount is within active date range and usage limits.
