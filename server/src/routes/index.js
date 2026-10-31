@@ -16,6 +16,8 @@ import discountRoutes from './ops/discounts.js';
 import templateRoutes from './ops/templates.js';
 import customerRoutes from './ops/customers.js';
 import subscriptionRoutes from './ops/subscriptions.js';
+import invoiceRoutes from './ops/invoices.js';
+import paymentRoutes from './ops/payments.js';
 
 const router = Router();
 
@@ -38,5 +40,7 @@ router.use('/ops/discounts', discountRoutes);
 router.use('/ops/templates', templateRoutes);
 router.use('/ops/customers', customerRoutes);
 router.use('/ops/subscriptions', subscriptionRoutes);
+router.use('/ops/invoices', invoiceRoutes);
+router.use('/ops/payments', paymentRoutes);
 
 export default router;

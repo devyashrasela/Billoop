@@ -25,6 +25,9 @@ import Templates from './pages/Templates/Templates';
 import Subscriptions from './pages/Subscriptions/Subscriptions';
 import SubscriptionDetail from './pages/Subscriptions/SubscriptionDetail';
 import SubscriptionCreate from './pages/Subscriptions/SubscriptionCreate';
+import Invoices from './pages/Invoices/Invoices';
+import InvoiceDetail from './pages/Invoices/InvoiceDetail';
+import Payments from './pages/Payments/Payments';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -68,6 +71,9 @@ export default function App() {
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/subscriptions/new" element={<SubscriptionCreate />} />
           <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
+          <Route path="/invoices" element={<Invoices />} />
+          <Route path="/invoices/:id" element={<InvoiceDetail />} />
+          <Route path="/payments" element={<Payments />} />
           <Route path="/products" element={<Products />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/templates" element={<Templates />} />

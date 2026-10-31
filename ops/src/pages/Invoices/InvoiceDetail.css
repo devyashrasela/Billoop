@@ -1,0 +1,113 @@
+.inv-detail-page {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.inv-detail-nav {
+  margin-bottom: 1rem;
+}
+
+.inv-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.inv-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inv-detail-title h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.inv-detail-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inv-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.inv-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inv-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  border-bottom: 1px dashed var(--color-border, #f1f5f9);
+  padding-bottom: 0.5rem;
+}
+
+.inv-info-label {
+  color: var(--color-text-secondary, #64748b);
+}
+
+.inv-info-val {
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+  text-align: right;
+}
+
+.inv-lines-card {
+  margin-bottom: 1.5rem;
+}
+
+.inv-lines-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.inv-lines-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-subtle, #f8fafc);
+  color: var(--color-text-secondary, #64748b);
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.inv-lines-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border, #f1f5f9);
+}
+
+.inv-totals-box {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-subtle, #f8fafc);
+  border-radius: var(--radius-md, 0.5rem);
+}
+
+.inv-totals-inner {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inv-payments-card {
+  margin-bottom: 1.5rem;
+}

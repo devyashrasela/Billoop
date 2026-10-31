@@ -1,0 +1,36 @@
+.record-payment-summary {
+  background: var(--color-bg-subtle, #f8fafc);
+  padding: 1rem;
+  border-radius: var(--radius-md, 0.5rem);
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+}
+
+.record-payment-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+}
+
+.record-payment-row--highlight {
+  font-weight: 700;
+  font-size: 1rem;
+  border-top: 1px dashed var(--color-border, #cbd5e1);
+  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+  color: var(--color-primary, #6366f1);
+}
+
+.record-payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.record-payment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}

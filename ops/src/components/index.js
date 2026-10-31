@@ -6,4 +6,5 @@ export * from './Table/Table';
 export * from './Modal/Modal';
 export * from './StatusStepper/StatusStepper';
 export * from './Chip/Chip';
+export * from './RecordPaymentModal/RecordPaymentModal';
 
