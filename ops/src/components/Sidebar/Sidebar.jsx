@@ -55,6 +55,18 @@ export const Sidebar = () => {
       >
         Subscriptions
       </NavLink>
+      <NavLink
+        to="/invoices"
+        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+      >
+        Invoices
+      </NavLink>
+      <NavLink
+        to="/payments"
+        className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+      >
+        Payments
+      </NavLink>
 
       <div className="side__group">Catalog & Pricing</div>
       <NavLink

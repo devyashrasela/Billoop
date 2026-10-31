@@ -1,0 +1,86 @@
+.invoices-page {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.invoices-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.invoices-header__title h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+  margin: 0 0 0.25rem 0;
+}
+
+.invoices-header__title p {
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.invoices-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.invoices-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.invoices-search {
+  min-width: 280px;
+}
+
+.inv-num-link {
+  font-weight: 600;
+  color: var(--color-primary, #6366f1);
+  text-decoration: none;
+}
+
+.inv-num-link:hover {
+  text-decoration: underline;
+}
+
+.inv-customer-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.inv-customer-name {
+  font-weight: 500;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.inv-customer-company {
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.inv-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--color-border, #e2e8f0);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.inv-progress-fill {
+  height: 100%;
+  background: var(--color-success, #16a34a);
+  border-radius: 2px;
+}
