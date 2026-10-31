@@ -94,7 +94,7 @@ export const getInvoiceById = async (id) => {
 };
 
 export const confirmInvoice = async (id, actorId = null) => {
-  return await sequelize.transaction(async (t) => {
+  await sequelize.transaction(async (t) => {
     const invoice = await Invoice.findByPk(id, {
       lock: t.LOCK.UPDATE,
       transaction: t,
