@@ -14,6 +14,7 @@ import ResetPassword from './pages/ResetPassword/ResetPassword';
 import Taxes from './pages/Taxes/Taxes';
 import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
 import Products from './pages/Products/Products';
+import Plans from './pages/Plans/Plans';
 import './AppLayout.css';
 
 function OpsLayout() {
@@ -41,6 +42,12 @@ function OpsLayout() {
             className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
           >
             Products & Variants
+          </NavLink>
+          <NavLink
+            to="/plans"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Subscription Plans
           </NavLink>
           <NavLink
             to="/taxes"
@@ -100,6 +107,7 @@ export default function App() {
 
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/products" element={<Products />} />
+          <Route path="/plans" element={<Plans />} />
           <Route path="/taxes" element={<Taxes />} />
           <Route path="/payment-terms" element={<PaymentTerms />} />
         </Route>
