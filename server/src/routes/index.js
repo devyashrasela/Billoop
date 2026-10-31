@@ -3,6 +3,7 @@ import { Router } from 'express';
 // ── Person A routes ──
 import authRoutes from './auth.js';
 import staffRoutes from './ops/staff.js';
+import billingRoutes from './ops/billing.js';
 
 // ── Person B routes ──
 import taxRoutes from './ops/taxes.js';
@@ -20,6 +21,7 @@ router.get('/health', (req, res) => res.json({ ok: true, time: new Date().toISOS
 // ── Person A mounts ──
 router.use('/auth', authRoutes);
 router.use('/ops/staff', staffRoutes);
+router.use('/ops/billing', billingRoutes);
 
 // ── Person B mounts ──
 router.use('/ops/taxes', taxRoutes);
