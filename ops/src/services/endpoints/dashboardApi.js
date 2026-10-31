@@ -6,8 +6,16 @@ export const dashboardApi = api.injectEndpoints({
       query: () => '/ops/dashboard/summary',
       providesTags: ['Dashboard'],
     }),
+    triggerBillingSweep: builder.mutation({
+      query: (body = {}) => ({
+        url: '/ops/billing/run-now',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Dashboard', 'Invoice', 'Subscription'],
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetDashboardSummaryQuery } = dashboardApi;
+export const { useGetDashboardSummaryQuery, useTriggerBillingSweepMutation } = dashboardApi;
