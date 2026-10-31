@@ -9,6 +9,7 @@ import taxRoutes from './ops/taxes.js';
 import paymentTermRoutes from './ops/paymentTerms.js';
 import productRoutes from './ops/products.js';
 import planRoutes from './ops/plans.js';
+import discountRoutes from './ops/discounts.js';
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use('/ops/taxes', taxRoutes);
 router.use('/ops/payment-terms', paymentTermRoutes);
 router.use('/ops/products', productRoutes);
 router.use('/ops/plans', planRoutes);
+router.use('/ops/discounts', discountRoutes);
 
 export default router;

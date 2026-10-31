@@ -15,6 +15,7 @@ import Taxes from './pages/Taxes/Taxes';
 import PaymentTerms from './pages/PaymentTerms/PaymentTerms';
 import Products from './pages/Products/Products';
 import Plans from './pages/Plans/Plans';
+import Discounts from './pages/Discounts/Discounts';
 import './AppLayout.css';
 
 function OpsLayout() {
@@ -48,6 +49,12 @@ function OpsLayout() {
             className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
           >
             Subscription Plans
+          </NavLink>
+          <NavLink
+            to="/discounts"
+            className={({ isActive }) => `side__link ${isActive ? 'side__link--on' : ''}`}
+          >
+            Discounts & Coupons
           </NavLink>
           <NavLink
             to="/taxes"
@@ -108,6 +115,7 @@ export default function App() {
           {/* ── Person B Catalog & Transaction Pages ── */}
           <Route path="/products" element={<Products />} />
           <Route path="/plans" element={<Plans />} />
+          <Route path="/discounts" element={<Discounts />} />
           <Route path="/taxes" element={<Taxes />} />
           <Route path="/payment-terms" element={<PaymentTerms />} />
         </Route>
