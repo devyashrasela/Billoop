@@ -12,7 +12,13 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
 
 // ── Person B pages ──
-// (Person B imports subscriptions, invoices, and portal pages here)
+import PortalLayout from './components/Layout/PortalLayout';
+import SubscriptionList from './pages/Subscriptions/SubscriptionList';
+import SubscriptionDetail from './pages/Subscriptions/SubscriptionDetail';
+import InvoiceList from './pages/Invoices/InvoiceList';
+import InvoiceDetail from './pages/Invoices/InvoiceDetail';
+import PlanBrowser from './pages/Plans/PlanBrowser';
+import Profile from './pages/Profile/Profile';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -37,19 +43,15 @@ export default function App() {
 
       {/* ── Protected Customer Routes ── */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Navigate to="/subscriptions" replace />} />
-        <Route
-          path="/subscriptions"
-          element={
-            <div style={{ padding: '2rem' }}>
-              <h2>My Subscriptions</h2>
-              <p>Welcome to the customer portal! Milestone M3 Auth is active.</p>
-            </div>
-          }
-        />
-
-        {/* ── Person B routes ── */}
-        {/* (Person B will insert my subscriptions, my invoices, and profile routes here) */}
+        <Route element={<PortalLayout />}>
+          <Route path="/" element={<Navigate to="/subscriptions" replace />} />
+          <Route path="/subscriptions" element={<SubscriptionList />} />
+          <Route path="/subscriptions/:id" element={<SubscriptionDetail />} />
+          <Route path="/invoices" element={<InvoiceList />} />
+          <Route path="/invoices/:id" element={<InvoiceDetail />} />
+          <Route path="/plans" element={<PlanBrowser />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
       </Route>
 
       {/* ── Fallback ── */}

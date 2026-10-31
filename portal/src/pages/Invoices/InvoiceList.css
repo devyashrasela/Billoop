@@ -1,0 +1,26 @@
+.portal-inv-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.portal-inv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.portal-inv-header h1 {
+  font-size: var(--fs-2xl, 1.625rem);
+  font-weight: var(--fw-bold, 700);
+  margin: 0 0 0.25rem 0;
+  color: var(--ink, #1a1a18);
+}
+
+.portal-inv-header p {
+  color: var(--muted, #6f6e68);
+  margin: 0;
+  font-size: var(--fs-base, 0.875rem);
+}
