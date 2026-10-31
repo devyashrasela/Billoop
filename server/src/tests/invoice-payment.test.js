@@ -9,6 +9,36 @@ import {
   listInvoicesQuerySchema,
 } from '../validators/invoice.validator.js';
 import { renderInvoiceHtml } from '../services/invoicePrint.service.js';
+import { confirmInvoice } from '../services/invoice.service.js';
+import { sequelize, Invoice, AuditLog } from '../models/index.js';
+
+test('Invoice confirmation returns the populated invoice after commit', async (t) => {
+  let committed = false;
+  const transaction = { LOCK: { UPDATE: 'UPDATE' } };
+  const invoice = {
+    id: 42,
+    number: 'INV-2026-000042',
+    status: 'draft',
+    toJSON() { return { id: this.id, status: this.status }; },
+    async save(options) { assert.equal(options.transaction, transaction); },
+  };
+  const populated = { id: 42, status: 'confirmed', lines: [], payments: [], customer: { id: 7 } };
+  t.mock.method(sequelize, 'transaction', async (callback) => {
+    await callback(transaction);
+    committed = true;
+  });
+  t.mock.method(Invoice, 'findByPk', async (id, options) => {
+    assert.equal(id, 42);
+    if (options.transaction) return invoice;
+    assert.equal(committed, true);
+    assert.ok(options.include.length > 0);
+    return populated;
+  });
+  t.mock.method(AuditLog, 'create', async () => ({}));
+
+  assert.equal(await confirmInvoice(42), populated);
+  assert.equal(invoice.status, 'confirmed');
+});
 
 test('Invoice & Payment Validators - validate schemas and constraints', () => {
   // Valid payment payload

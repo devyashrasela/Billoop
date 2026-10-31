@@ -47,14 +47,16 @@ export const advancePeriod = (dateStr, period) => {
     case 'weekly':
       date.setUTCDate(date.getUTCDate() + 7);
       break;
-    case 'monthly':
-      date.setUTCMonth(date.getUTCMonth() + 1);
-      break;
     case 'yearly':
+      date.setUTCDate(1);
       date.setUTCFullYear(date.getUTCFullYear() + 1);
+      date.setUTCDate(Math.min(day, new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate()));
       break;
+    case 'monthly':
     default:
+      date.setUTCDate(1);
       date.setUTCMonth(date.getUTCMonth() + 1);
+      date.setUTCDate(Math.min(day, new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0)).getUTCDate()));
   }
 
   return date.toISOString().split('T')[0];
@@ -275,19 +277,19 @@ export const runBillingSweep = async ({ todayStr = toDateString(new Date()), bat
     failed: [],
   };
 
-  let offset = 0;
+  let lastId = 0;
   let hasMore = true;
 
   while (hasMore) {
     const dueSubscriptions = await Subscription.findAll({
       where: {
+        id: { [Op.gt]: lastId },
         status: 'active',
         isPaused: false,
         nextBillingDate: { [Op.lte]: todayStr },
       },
       attributes: ['id', 'number', 'nextBillingDate'],
       limit: batchSize,
-      offset,
       order: [['id', 'ASC']],
     });
 
@@ -344,7 +346,7 @@ export const runBillingSweep = async ({ todayStr = toDateString(new Date()), bat
       }
     }
 
-    offset += batchSize;
+    lastId = dueSubscriptions[dueSubscriptions.length - 1].id;
   }
 
   console.log(
